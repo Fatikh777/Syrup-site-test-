@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Barcode Syrup — натуральные сиропы из Кыргызстана</title>
+  <meta name="description" content="Barcode Syrup — первые сиропы Кыргызстана. 33 натуральных вкуса для кофе, лимонадов и коктейлей. Заказ в WhatsApp: +996 507 508 636.">
+  <meta name="theme-color" content="#0f0c0a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f0c0a'/%3E%3Cg fill='%23ffc21a'%3E%3Crect x='6' y='7' width='2' height='18'/%3E%3Crect x='10' y='7' width='4' height='18'/%3E%3Crect x='16' y='7' width='1.5' height='18'/%3E%3Crect x='19.5' y='7' width='3' height='18'/%3E%3Crect x='24' y='7' width='2' height='18'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+
+  <!-- Загрузка: штрихкод со сканирующей полосой -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__box">
+      <div class="loader__code">
+        <svg class="loader__bars" id="loaderBars" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
+        <span class="loader__laser"></span>
+      </div>
+      <div class="loader__digits"><span>4 870</span><span id="loaderCount">000</span><span>033 1</span></div>
+      <div class="loader__brand">BARCODE <b>SYRUP</b></div>
+    </div>
+  </div>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <!-- Шапка -->
+  <header class="header" id="header">
+    <a href="#top" class="logo" aria-label="Barcode Syrup, наверх">
+      <svg class="logo__bars" viewBox="0 0 30 22" aria-hidden="true"><g fill="currentColor"><rect x="0" width="2" height="22"/><rect x="4" width="4" height="22"/><rect x="10" width="1.5" height="22"/><rect x="13.5" width="3" height="22"/><rect x="18.5" width="1.5" height="22"/><rect x="22" width="4" height="22"/><rect x="28" width="2" height="22"/></g></svg>
+      <span>BARCODE<br><b>SYRUP</b></span>
+    </a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#why">О нас</a>
+      <a href="#flavors">Вкусы</a>
+      <a href="#recipes">Рецепты</a>
+      <a href="#partners">Для бизнеса</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+  </header>
+  <a class="header-cta js-wa" data-wa="Здравствуйте! Хочу заказать сиропы Barcode Syrup." href="#" target="_blank" rel="noopener">Заказать</a>
+
+  <main id="top">
+
+    <!-- 3D-история: бутылка и пять вкусов -->
+    <section class="story" id="story" aria-label="Пять вкусов Barcode Syrup">
+      <div class="story__stage" id="stage">
+        <canvas class="story__canvas" id="gl"></canvas>
+
+        <!-- запасной вариант без WebGL -->
+        <div class="fallback-bottle" aria-hidden="true">
+          <svg viewBox="0 0 120 320">
+            <defs>
+              <linearGradient id="fbGlass" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".2" stop-color="#fff" stop-opacity=".05"/><stop offset=".8" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".3"/></linearGradient>
+            </defs>
+            <rect x="46" y="4" width="28" height="40" rx="4" fill="#111"/>
+            <path d="M50 44h20v26c0 10 34 22 34 46v190a10 10 0 0 1-10 10H26a10 10 0 0 1-10-10V116c0-24 34-36 34-46z" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.5)" stroke-width="2"/>
+            <path class="fb-liquid" d="M20 130h80v176a6 6 0 0 1-6 6H26a6 6 0 0 1-6-6z"/>
+            <path d="M50 44h20v26c0 10 34 22 34 46v190a10 10 0 0 1-10 10H26a10 10 0 0 1-10-10V116c0-24 34-36 34-46z" fill="url(#fbGlass)"/>
+          </svg>
+        </div>
+
+        <div class="story__ui">
+          <div class="intro" id="intro">
+            <p class="eyebrow"><span class="dot"></span> Сделано в Кыргызстане</p>
+            <h1 class="intro__title split" data-split>Первые сиропы Кыргызстана</h1>
+            <p class="intro__lede">Натуральные сиропы для кофе, лимонадов и коктейлей. Фруктовые пюре и соки дают яркий вкус в каждой бутылке. 33 вкуса, бутылка 1 литр.</p>
+            <div class="intro__actions">
+              <a class="btn btn--light js-wa" data-wa="Здравствуйте! Хочу заказать сиропы Barcode Syrup." href="#" target="_blank" rel="noopener">Заказать в WhatsApp</a>
+              <a class="btn btn--ghost" href="#flavors">Все 33 вкуса</a>
+            </div>
+          </div>
+
+          <div class="flavor-panels" id="panels"></div>
+
+          <div class="story__progress" id="progress" aria-hidden="true"></div>
+
+          <div class="scroll-hint" id="scrollHint" aria-hidden="true">
+            <span class="scroll-hint__bar"><i></i></span>
+            <span>Листайте</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Бегущая строка -->
+    <section class="marquee" data-bg="#120b1c" data-fg="#f6efe4" aria-label="Вкусы">
+      <div class="marquee__track" id="marquee"></div>
+    </section>
+
+    <!-- Почему мы -->
+    <section class="section why" id="why" data-bg="#f6efe4" data-fg="#1a120b">
+      <div class="wrap">
+        <p class="kicker">01 / О нас</p>
+        <h2 class="h2 split" data-split>Продвигаем национальный продукт</h2>
+        <p class="lead reveal">Мы первая и единственная компания в Кыргызстане, которая производит сиропы. Каждая бутылка делается здесь, из пюре и концентрированных соков, и поддерживает местное производство.</p>
+
+        <div class="why__grid">
+          <article class="why-card reveal">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 38C10 20 22 10 40 8c-1 18-10 30-28 30Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M10 38 28 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <h3>Натуральный состав</h3>
+            <p>В основе фруктовые пюре и концентрированные соки, поэтому вкус яркий и честный.</p>
+          </article>
+          <article class="why-card reveal">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M24 4v6M24 38v6M4 24h6M38 24h6M9.9 9.9l4.2 4.2M33.9 33.9l4.2 4.2M9.9 38.1l4.2-4.2M33.9 14.1l4.2-4.2"/></g></svg>
+            <h3>Сделано в Кыргызстане</h3>
+            <p>Производим сами, здесь и сейчас. Местный продукт уровня мировых брендов.</p>
+          </article>
+          <article class="why-card reveal">
+            <span class="why-card__num" data-count="33">0</span>
+            <h3>Вкуса в линейке</h3>
+            <p>От манго и маракуйи до солёной карамели. Скоро добавим фруктовое пюре.</p>
+          </article>
+          <article class="why-card reveal">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 6h8v6c0 3 8 5 8 11v17a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V23c0-6 8-8 8-11Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M18 30a6 6 0 0 1 10-4l2 2m0-5v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>Выкуп бутылок</h3>
+            <p>Пустую бутылку 1000 мл выкупаем за 30 сом. Бережём природу вместе.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Вкусы -->
+    <section class="section flavors" id="flavors" data-bg="#0f0c0a" data-fg="#f6efe4">
+      <div class="wrap">
+        <div class="flavors__head">
+          <div>
+            <p class="kicker">02 / Каталог</p>
+            <h2 class="h2 split" data-split>33 вкуса</h2>
+          </div>
+          <p class="lead reveal">Названия на английском, как на этикетке. Наведите на карточку или нажмите на неё, а потом закажите нужный вкус в WhatsApp.</p>
+        </div>
+        <div class="filters" id="filters" role="group" aria-label="Фильтр вкусов"></div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- Рецепты -->
+    <section class="section recipes" id="recipes" data-bg="#ffe9d6" data-fg="#2a1408">
+      <div class="wrap">
+        <p class="kicker">03 / Идеи для меню</p>
+        <h2 class="h2 split" data-split>Напитки за минуту</h2>
+        <p class="lead reveal">Несколько примеров, как работать с сиропами. Пропорции подбирайте под себя.</p>
+        <div class="recipes__grid" id="recipesGrid"></div>
+      </div>
+    </section>
+
+    <!-- Для бизнеса -->
+    <section class="section partners" id="partners" data-bg="#ffb81c" data-fg="#1a0f02">
+      <div class="wrap partners__wrap">
+        <div>
+          <p class="kicker">04 / Для кофеен и баров</p>
+          <h2 class="h2 split" data-split>Давайте работать вместе</h2>
+          <ul class="partners__list reveal">
+            <li>Стабильный вкус от партии к партии</li>
+            <li>Образцы на пробу для вашей команды</li>
+            <li>Оптовые условия для кофеен, баров и ресторанов</li>
+            <li>Подскажем рецепты под ваше меню</li>
+          </ul>
+          <a class="btn btn--dark js-wa reveal" data-wa="Здравствуйте! Мы кофейня/бар и хотим сотрудничать с Barcode Syrup. Расскажите про оптовые условия." href="#" target="_blank" rel="noopener">Хочу сотрудничать</a>
+        </div>
+        <div class="prices">
+          <div class="price reveal">
+            <span class="price__label">Цена за литр</span>
+            <span class="price__value"><span data-count="350">0</span>–<span data-count="400">0</span><small>сом</small></span>
+          </div>
+          <div class="price reveal">
+            <span class="price__label">Выкуп пустой бутылки</span>
+            <span class="price__value"><span data-count="30">0</span><small>сом</small></span>
+          </div>
+          <div class="price reveal">
+            <span class="price__label">Объём бутылки</span>
+            <span class="price__value"><span data-count="1000">0</span><small>мл</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="section contacts" id="contacts" data-bg="#0f0c0a" data-fg="#f6efe4">
+      <div class="wrap">
+        <p class="kicker">05 / Контакты</p>
+        <h2 class="h2 h2--xl split" data-split>Напишите нам</h2>
+        <div class="contacts__row">
+          <a class="wa-big js-wa" data-wa="Здравствуйте! Хочу заказать сиропы Barcode Syrup." href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.7c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.7 10.7 0 1 1 16 26.7Zm5.9-8c-.3-.2-1.9-1-2.2-1-.3-.2-.5-.2-.7.1l-1 1.3c-.2.2-.4.2-.7 0a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6 0-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.2 1.3 3.4c.2.2 2.3 3.5 5.6 4.9 2.1.9 2.9 1 4 .8.6 0 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5l-.6-.4Z"/></svg>
+            <span><small>Заказать в WhatsApp</small>+996 507 508 636</span>
+          </a>
+          <div class="contacts__info">
+            <a class="contacts__phone" href="tel:+996507508636">+996 507 508 636</a>
+            <p>Звоните или пишите в WhatsApp: ответим, поможем выбрать вкус и договоримся о доставке.</p>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">
+        <svg class="footer__code" id="footerCode" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="footer__digits" aria-hidden="true"><span>9</span><span>965</span><span>075</span><span>086</span><span>36</span></div>
+        <div class="footer__row">
+          <span>© Barcode Syrup</span>
+          <span>Сделано в Кыргызстане</span>
+          <a href="#top">Наверх ↑</a>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Закреплённая кнопка на телефоне -->
+  <a class="sticky-wa js-wa" data-wa="Здравствуйте! Хочу заказать сиропы Barcode Syrup." href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm5.9 15.7c-.3-.2-1.9-1-2.2-1-.3-.2-.5-.2-.7.1l-1 1.3c-.2.2-.4.2-.7 0a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6 0-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.2 1.3 3.4c.2.2 2.3 3.5 5.6 4.9 2.1.9 2.9 1 4 .8.6 0 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5l-.6-.4Z"/></svg>
+    Заказать в WhatsApp
+  </a>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+  <script src="js/data.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
