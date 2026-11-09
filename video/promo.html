@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<title>Авто-промо G30</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;overflow:hidden}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#05070b;
+    font-family:"Inter Display","Inter",system-ui,sans-serif;color:#fff;transform-origin:0 0}
+  #svg{position:absolute;inset:0;width:1080px;height:1920px;display:block}
+  .layer{position:absolute;inset:0;pointer-events:none}
+  .cap{position:absolute;left:60px;width:960px;text-align:center;line-height:1.08;letter-spacing:-.02em;
+    text-shadow:0 6px 40px rgba(0,0,0,.75),0 2px 6px rgba(0,0,0,.6)}
+  .cap .w{display:inline-block;white-space:pre;will-change:transform,opacity,filter}
+  .cap .a{color:#3ec5ff}
+  .kick{font-size:34px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+  .mid{font-size:62px;font-weight:800}
+  .big{font-size:96px;font-weight:900}
+  .huge{font-size:220px;font-weight:900;letter-spacing:-.05em}
+  #flash{background:#fff;opacity:0}
+  #dark{background:#000;opacity:0}
+  #leak{opacity:0;background:radial-gradient(60% 40% at 85% 20%,rgba(255,120,40,.55),transparent 70%),radial-gradient(50% 35% at 10% 85%,rgba(62,197,255,.35),transparent 70%);mix-blend-mode:screen}
+  #vig{background:radial-gradient(120% 80% at 50% 50%,transparent 55%,rgba(0,0,0,.65) 100%)}
+  #grain{width:1080px;height:1920px;opacity:.085;mix-blend-mode:overlay;image-rendering:pixelated}
+  /* owner card */
+  #ownerCard{position:absolute;left:80px;top:250px;width:920px;opacity:0}
+  #ownerCard .tag{font-size:30px;letter-spacing:.35em;font-weight:600;color:#3ec5ff}
+  #ownerCard h1{margin:6px 0 26px;font-size:132px;font-weight:900;letter-spacing:-.04em;line-height:.95}
+  #ownerCard .row{display:flex;align-items:center;gap:22px;margin:14px 0;font-size:34px;font-weight:600}
+  #ownerCard .row .k{width:390px;color:rgba(255,255,255,.6);letter-spacing:.06em;text-transform:uppercase;font-size:26px}
+  #ownerCard .row .v{font-weight:800}
+  #ownerCard .bar{width:150px;height:8px;border-radius:4px;background:rgba(255,255,255,.15);overflow:hidden}
+  #ownerCard .bar i{display:block;height:100%;background:#ff5a36;width:100%}
+  /* eta card */
+  #eta{position:absolute;left:80px;top:220px;width:920px;height:170px;border-radius:40px;background:rgba(18,22,30,.88);
+    border:2px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:30px;padding:0 40px;box-sizing:border-box;opacity:0;
+    box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  #eta .av{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#ffb36b,#ff5a36);flex:none}
+  #eta .t1{font-size:30px;color:rgba(255,255,255,.6);font-weight:600}
+  #eta .t2{font-size:56px;font-weight:900;letter-spacing:-.02em}
+  #eta .min{margin-left:auto;font-size:84px;font-weight:900;color:#3ec5ff;font-variant-numeric:tabular-nums}
+  /* end */
+  #end{position:absolute;inset:0;opacity:0}
+  .step{position:absolute;left:110px;display:flex;align-items:baseline;gap:34px;font-weight:900}
+  .step .n{font-size:44px;color:#3ec5ff;font-weight:700;letter-spacing:.05em}
+  .step .s{font-size:132px;letter-spacing:-.045em}
+  .fin{position:absolute;left:0;width:1080px;text-align:center;font-weight:900;letter-spacing:-.035em}
+  #pill{position:absolute;left:50%;top:1200px;transform:translateX(-50%);padding:26px 60px;border-radius:999px;background:#3ec5ff;color:#03131c;
+    font-size:64px;font-weight:900;letter-spacing:-.02em;white-space:nowrap;box-shadow:0 20px 80px rgba(62,197,255,.45)}
+  #dm{position:absolute;left:0;width:1080px;top:1360px;text-align:center;font-size:44px;font-weight:700;color:rgba(255,255,255,.85)}
+  #hud{position:absolute;inset:0;opacity:0;font-family:"Inter",monospace;font-weight:600}
+  #hud .rec{position:absolute;left:96px;top:150px;font-size:34px;letter-spacing:.12em;display:flex;align-items:center;gap:16px}
+  #hud .rec i{width:24px;height:24px;border-radius:50%;background:#ff3b30;display:block}
+  #hud .tc{position:absolute;right:96px;top:150px;font-size:34px;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+  #hud .info{position:absolute;left:0;width:1080px;top:1730px;text-align:center;font-size:28px;letter-spacing:.2em;color:rgba(255,255,255,.75)}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+  <!-- paints -->
+  <linearGradient id="carPaint" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7d8ca3"/><stop offset=".16" stop-color="#344158"/>
+    <stop offset=".42" stop-color="#121a28"/><stop offset=".52" stop-color="#25324a"/>
+    <stop offset=".6" stop-color="#151d2c"/><stop offset=".85" stop-color="#0a0f18"/><stop offset="1" stop-color="#04070c"/>
+  </linearGradient>
+  <linearGradient id="glassG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#26364f"/><stop offset=".55" stop-color="#0c131f"/><stop offset="1" stop-color="#05080d"/>
+  </linearGradient>
+  <linearGradient id="rimG" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f2f5f8"/><stop offset=".45" stop-color="#8e98a4"/><stop offset=".7" stop-color="#d8dee4"/><stop offset="1" stop-color="#6c7580"/>
+  </linearGradient>
+  <linearGradient id="tailG" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#5a0000"/><stop offset=".5" stop-color="#d4141a"/><stop offset="1" stop-color="#ff3b3b"/>
+  </linearGradient>
+  <linearGradient id="sweepG" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="fobG" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#3a414c"/><stop offset=".5" stop-color="#14171c"/><stop offset="1" stop-color="#07080a"/>
+  </linearGradient>
+  <linearGradient id="beamG" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="-900" y2="0">
+    <stop offset="0" stop-color="#e6f4ff" stop-opacity=".55"/><stop offset="1" stop-color="#e6f4ff" stop-opacity="0"/>
+  </linearGradient>
+  <radialGradient id="headGlow"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#d8f0ff" stop-opacity=".9"/><stop offset="1" stop-color="#9fd8ff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="redGlow"><stop offset="0" stop-color="#ff6b6b"/><stop offset=".3" stop-color="#ff1a1a" stop-opacity=".8"/><stop offset="1" stop-color="#ff0000" stop-opacity="0"/></radialGradient>
+  <radialGradient id="shadowG"><stop offset="0" stop-color="#000" stop-opacity=".9"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <radialGradient id="warmPool"><stop offset="0" stop-color="#ffc277" stop-opacity=".35"/><stop offset="1" stop-color="#ffc277" stop-opacity="0"/></radialGradient>
+  <linearGradient id="coneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc98a" stop-opacity=".32"/><stop offset="1" stop-color="#ffc98a" stop-opacity="0"/></linearGradient>
+  <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#03050c"/><stop offset=".45" stop-color="#0b1430"/><stop offset=".62" stop-color="#2a1d3d"/><stop offset=".7" stop-color="#4a2a3a"/>
+  </linearGradient>
+  <linearGradient id="roadG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14161b"/><stop offset="1" stop-color="#050608"/></linearGradient>
+  <radialGradient id="wallG" cx=".5" cy=".55" r=".7"><stop offset="0" stop-color="#2b313b"/><stop offset=".6" stop-color="#11141a"/><stop offset="1" stop-color="#050608"/></radialGradient>
+  <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1d23"/><stop offset="1" stop-color="#040506"/></linearGradient>
+  <radialGradient id="spotG" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="#16324a"/><stop offset=".55" stop-color="#0a0f16"/><stop offset="1" stop-color="#030405"/></radialGradient>
+  <linearGradient id="headShade" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#3a8db5"/><stop offset=".1" stop-color="#16202b"/><stop offset=".5" stop-color="#0e1117"/><stop offset=".88" stop-color="#17110e"/><stop offset="1" stop-color="#b8623a"/>
+  </linearGradient>
+  <linearGradient id="lensG" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#2f86b3"/><stop offset=".35" stop-color="#070b12"/><stop offset=".7" stop-color="#0b0d12"/><stop offset="1" stop-color="#c4682e"/>
+  </linearGradient>
+  <linearGradient id="fadeDown" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="billG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9f1e2"/><stop offset="1" stop-color="#b9cdb0"/></linearGradient>
+
+  <filter id="blur6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="blur14" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+  <filter id="blur30" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+  <filter id="mblur" x="-60%" y="-20%" width="220%" height="140%"><feGaussianBlur id="mblurFE" stdDeviation="0 0"/></filter>
+  <filter id="mblur2" x="-60%" y="-20%" width="220%" height="140%"><feGaussianBlur id="mblurFE2" stdDeviation="0 0"/></filter>
+
+  <mask id="reflMask" maskUnits="userSpaceOnUse" x="-500" y="1290" width="2400" height="400">
+    <rect x="-500" y="1290" width="2400" height="260" fill="url(#fadeDown)"/>
+  </mask>
+  <mask id="reflMask2" maskUnits="userSpaceOnUse" x="-500" y="1310" width="2400" height="400">
+    <rect x="-500" y="1310" width="2400" height="300" fill="url(#fadeDown)"/>
+  </mask>
+
+  <!-- car geometry: local coords, length 900, ground y=272 -->
+  <path id="bodyPath" d="M14,238 C6,220 6,200 10,186 C12,170 18,160 36,154 Q200,128 330,116 C380,90 430,48 472,30 C520,12 610,10 660,20 C720,40 765,80 800,102 L880,108 C893,110 898,118 899,130 L900,176 C900,200 898,226 890,238 L777,240 A72,72 0 1 0 647,240 L235,240 A72,72 0 1 0 105,240 L22,240 C18,240 16,240 14,238 Z"/>
+  <clipPath id="bodyClip"><use href="#bodyPath"/></clipPath>
+  <clipPath id="doorClip" clipPathUnits="userSpaceOnUse"><path d="M342,118 C380,90 420,58 470,34 L558,26 L560,240 L346,240 Z"/></clipPath>
+
+  <g id="carBodyDef">
+    <use href="#bodyPath" fill="url(#carPaint)"/>
+    <g clip-path="url(#bodyClip)">
+      <path d="M0,150 C300,128 600,120 900,122 L900,140 C600,138 300,146 0,170 Z" fill="#fff" opacity=".10"/>
+      <path d="M0,200 C300,196 600,194 900,190 L900,272 L0,272Z" fill="#000" opacity=".35"/>
+      <path d="M0,182 C300,174 600,170 900,168" stroke="#86a9cf" stroke-width="2" opacity=".35" fill="none"/>
+      <rect id="sweepRect" x="-500" y="-40" width="170" height="340" fill="url(#sweepG)" transform="skewX(-22)"/>
+    </g>
+    <path d="M360,118 C410,80 440,56 480,42 C540,28 620,28 660,36 C700,48 740,80 762,104 L722,110 Z" fill="url(#glassG)"/>
+    <path d="M382,112 C430,72 470,50 520,42 L566,38 L478,114 Z" fill="#fff" opacity=".07"/>
+    <path d="M360,118 C410,80 440,56 480,42 C540,28 620,28 660,36 C700,48 740,80 762,104 L722,110 Z" fill="none" stroke="#b8c1cc" stroke-width="3" opacity=".8"/>
+    <path d="M552,34 L566,34 L566,114 L552,115 Z" fill="#05070a"/>
+    <path d="M700,50 L712,56 L716,108 L704,109 Z" fill="#05070a"/>
+    <path d="M342,120 C340,170 342,210 346,238 M560,114 C562,160 562,200 560,238 M748,108 C752,130 760,150 772,170" stroke="#000" stroke-opacity=".6" stroke-width="2" fill="none"/>
+    <rect x="468" y="146" width="44" height="7" rx="3.5" fill="#c9d1da" opacity=".65"/>
+    <rect x="660" y="140" width="44" height="7" rx="3.5" fill="#c9d1da" opacity=".65"/>
+    <path d="M36,158 C300,136 600,126 896,128" stroke="#a9bdd4" stroke-opacity=".45" stroke-width="2" fill="none"/>
+    <path d="M252,170 L292,166 L290,172 L252,176Z" fill="#c9d1da" opacity=".55"/>
+    <path d="M352,118 C356,100 388,96 398,108 L396,124 C380,126 360,126 352,118Z" fill="url(#carPaint)" stroke="#000" stroke-opacity=".5"/>
+    <path d="M16,172 C34,160 72,153 118,150 L110,166 C76,168 44,174 22,182 Z" fill="#0c1118" stroke="#9aa6b3" stroke-width="1.5"/>
+    <path d="M28,172 C50,164 80,160 108,157" stroke="#e4f6ff" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M6,192 L20,184 L24,210 L10,216Z" fill="#05070a" stroke="#c9d1da" stroke-width="1.5"/>
+    <path d="M16,220 L74,216 L70,232 L20,234Z" fill="#05070a"/>
+    <path d="M856,114 L899,122 L899,150 L846,142 Z" fill="url(#tailG)"/>
+    <path d="M862,124 L896,130" stroke="#ff9a9a" stroke-width="2"/>
+    <path d="M235,232 L647,232 L647,240 L235,240Z" fill="#000" opacity=".5"/>
+    <rect x="840" y="234" width="42" height="8" rx="4" fill="#9aa3ad"/>
+  </g>
+
+  <g id="wheelBack">
+    <circle r="63" fill="#0a0a0c"/>
+    <circle r="59" fill="none" stroke="#1f1f24" stroke-width="3"/>
+    <circle r="46" fill="#12151a"/>
+    <circle r="38" fill="#2b2f36"/>
+    <circle r="30" fill="none" stroke="#3b4048" stroke-width="2" stroke-dasharray="3 5"/>
+  </g>
+  <path id="caliperDef" d="M16,-40 A43,43 0 0 1 41,-14 L30,-9 A32,32 0 0 0 12,-29 Z" fill="#1f5fff"/>
+  <g id="spokesDef"></g>
+
+  <!-- key fob -->
+  <g id="fobDef">
+    <circle cx="0" cy="-196" r="36" fill="none" stroke="url(#rimG)" stroke-width="9"/>
+    <rect x="-20" y="-172" width="40" height="44" rx="12" fill="#1c2026"/>
+    <rect x="-96" y="-140" width="192" height="292" rx="90" fill="url(#fobG)"/>
+    <rect x="-96" y="-140" width="192" height="292" rx="90" fill="none" stroke="url(#rimG)" stroke-width="6"/>
+    <path d="M-70,-108 C-40,-134 40,-134 70,-108 L60,-62 C20,-82 -20,-82 -60,-62 Z" fill="#fff" opacity=".13"/>
+    <g fill="#14171b" stroke="#454c57" stroke-width="2">
+      <circle cx="0" cy="-36" r="28"/><circle cx="0" cy="32" r="28"/><circle cx="0" cy="98" r="24"/>
+    </g>
+    <g fill="none" stroke="#d3dae2" stroke-width="3.5" stroke-linecap="round">
+      <rect x="-10" y="-38" width="20" height="15" rx="3"/><path d="M-6,-38 v-6 a6,6 0 0 1 12,0 v6"/>
+      <rect x="-10" y="30" width="20" height="15" rx="3"/><path d="M-6,30 v-6 a6,6 0 0 1 12,-2"/>
+      <path d="M-13,104 h26 M-10,104 l4,-10 h12 l4,10"/>
+    </g>
+  </g>
+
+  <!-- owner bust (silhouette with rim light + sunglasses) -->
+  <g id="ownerBustDef">
+    <path d="M70,1920 C80,1640 240,1490 470,1410 L540,1490 L610,1410 C840,1490 1000,1640 1010,1920 Z" fill="#0b0d11"/>
+    <path d="M70,1920 C80,1640 240,1490 470,1410" fill="none" stroke="#3ec5ff" stroke-width="6" opacity=".55" filter="url(#blur6)"/>
+    <path d="M610,1410 C840,1490 1000,1640 1010,1920" fill="none" stroke="#ff7a3d" stroke-width="6" opacity=".5" filter="url(#blur6)"/>
+    <path d="M470,1410 L540,1530 L610,1410 L585,1402 L540,1470 L495,1402Z" fill="#c9ced6"/>
+    <path d="M300,1520 L470,1410 L520,1600 Z M780,1520 L610,1410 L560,1600Z" fill="#14171d"/>
+    <path d="M482,1215 L470,1395 L610,1395 L598,1215 Z" fill="#0d1015"/>
+    <ellipse cx="398" cy="1030" rx="22" ry="44" fill="#121820"/>
+    <ellipse cx="684" cy="1030" rx="22" ry="44" fill="#1a1411"/>
+    <path d="M400,1000 C400,850 470,790 540,790 C615,790 685,850 682,1000 C680,1080 665,1150 630,1200 C600,1240 570,1258 540,1258 C505,1258 478,1240 450,1200 C415,1150 400,1080 400,1000 Z" fill="url(#headShade)"/>
+    <path d="M440,1150 C470,1230 510,1258 540,1258 C570,1258 610,1230 642,1150 C620,1190 590,1215 540,1218 C490,1215 462,1190 440,1150Z" fill="#07090c" opacity=".7"/>
+    <path d="M393,985 C378,860 450,758 545,758 C640,758 708,840 690,985 C682,925 664,878 640,866 C600,846 480,846 444,866 C420,880 402,925 393,985 Z" fill="#06070a"/>
+    <path d="M400,1000 C400,850 470,790 540,790" fill="none" stroke="#5fd2ff" stroke-width="4" opacity=".7" filter="url(#blur6)"/>
+    <path d="M682,1000 C680,1080 665,1150 630,1200" fill="none" stroke="#ff8a4d" stroke-width="5" opacity=".6" filter="url(#blur6)"/>
+    <g id="glasses">
+      <path d="M530,956 C536,948 544,948 550,956" stroke="#c9a45c" stroke-width="5" fill="none"/>
+      <path d="M406,952 L392,970 M674,952 L690,970" stroke="#c9a45c" stroke-width="5"/>
+      <path id="lensL" d="M404,948 L532,944 C536,1000 524,1048 476,1048 C428,1048 408,1012 404,948 Z" fill="url(#lensG)" stroke="#c9a45c" stroke-width="4"/>
+      <path id="lensR" d="M548,944 L676,948 C672,1012 652,1048 604,1048 C556,1048 544,1000 548,944 Z" fill="url(#lensG)" stroke="#c9a45c" stroke-width="4"/>
+      <clipPath id="lensClip"><path d="M404,948 L532,944 C536,1000 524,1048 476,1048 C428,1048 408,1012 404,948 Z M548,944 L676,948 C672,1012 652,1048 604,1048 C556,1048 544,1000 548,944 Z"/></clipPath>
+      <g clip-path="url(#lensClip)">
+        <path d="M400,1010 C460,990 600,985 690,1000 L690,1012 C600,998 460,1004 400,1022Z" fill="#ffb074" opacity=".35"/>
+        <rect id="lensSweep" x="300" y="930" width="40" height="140" fill="#fff" opacity=".55" transform="skewX(-25)"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- buyer bust (cap) -->
+  <g id="buyerBustDef">
+    <path d="M70,1920 C80,1640 240,1490 470,1410 L540,1470 L610,1410 C840,1490 1000,1640 1010,1920 Z" fill="#141017"/>
+    <path d="M470,1410 C500,1440 580,1440 610,1410 L620,1440 C580,1470 500,1470 460,1440Z" fill="#2a2230"/>
+    <path d="M482,1215 L470,1405 L610,1405 L598,1215 Z" fill="#100d10"/>
+    <ellipse cx="398" cy="1040" rx="22" ry="44" fill="#1c1513"/>
+    <ellipse cx="684" cy="1040" rx="22" ry="44" fill="#1c1513"/>
+    <path d="M400,1010 C400,860 470,800 540,800 C615,800 685,860 682,1010 C680,1090 665,1160 630,1210 C600,1250 570,1265 540,1265 C505,1265 478,1250 450,1210 C415,1160 400,1090 400,1010 Z" fill="url(#headShade)"/>
+    <path d="M430,1110 C440,1200 490,1265 540,1265 C590,1265 640,1200 652,1110 C630,1170 600,1200 540,1205 C480,1200 450,1170 430,1110Z" fill="#050506" opacity=".85"/>
+    <path d="M392,960 C385,840 460,770 545,770 C635,770 700,840 692,960 Z" fill="#ff5a36"/>
+    <path d="M392,960 L692,960 C700,975 620,985 540,985 C460,985 380,975 392,960Z" fill="#c23a1e"/>
+    <path d="M520,960 C560,950 700,940 790,975 C760,990 650,992 600,985Z" fill="#d84426"/>
+    <path d="M470,1060 L520,1056 M560,1056 L610,1060" stroke="#000" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+  </g>
+
+  <!-- studio scene (used by camera + thumbnails + phone) -->
+  <g id="studioScene">
+    <rect x="-1200" y="-1200" width="3480" height="2510" fill="url(#wallG)"/>
+    <rect x="-1200" y="1310" width="3480" height="1500" fill="url(#floorG)"/>
+    <g id="lightTop" opacity="0">
+      <rect x="140" y="540" width="800" height="30" rx="15" fill="#fff" filter="url(#blur30)" opacity=".9"/>
+      <rect x="140" y="540" width="800" height="30" rx="15" fill="#fff"/>
+      <ellipse cx="540" cy="1400" rx="520" ry="60" fill="#fff" opacity=".06" filter="url(#blur14)"/>
+      <rect x="160" y="1560" width="760" height="10" rx="5" fill="#fff" opacity=".18" filter="url(#blur6)"/>
+    </g>
+    <g id="lightL" opacity="0">
+      <rect x="40" y="640" width="26" height="560" rx="13" fill="#bfe6ff" filter="url(#blur30)"/>
+      <rect x="40" y="640" width="26" height="560" rx="13" fill="#eaf7ff"/>
+    </g>
+    <g id="lightR" opacity="0">
+      <rect x="1014" y="640" width="26" height="560" rx="13" fill="#ffd9b8" filter="url(#blur30)"/>
+      <rect x="1014" y="640" width="26" height="560" rx="13" fill="#fff3e8"/>
+    </g>
+    <g mask="url(#reflMask2)" opacity=".28"><use href="#c2" transform="translate(0,2620) scale(1,-1)"/></g>
+    <g id="c2" transform="translate(90,1038)"></g>
+    <rect id="studioDark" x="-1200" y="-1200" width="3480" height="4000" fill="#000" opacity=".92"/>
+  </g>
+  <clipPath id="thumbClip" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="1080" height="1350" rx="40"/></clipPath>
+  <clipPath id="screenClip"><rect x="276" y="436" width="528" height="1108" rx="64"/></clipPath>
+  <clipPath id="postClip"><rect x="276" y="600" width="528" height="660"/></clipPath>
+  <clipPath id="avClipL"><circle cx="290" cy="800" r="170"/></clipPath>
+  <clipPath id="avClipR"><circle cx="790" cy="800" r="170"/></clipPath>
+</defs>
+
+<!-- ================= SCENE: STREET ================= -->
+<g id="sStreet">
+  <g id="streetCam">
+    <rect x="-1500" y="-600" width="4080" height="1840" fill="url(#skyG)"/>
+    <ellipse cx="540" cy="1180" rx="1200" ry="200" fill="#ff7a3d" opacity=".12" filter="url(#blur30)"/>
+    <g id="skyline"></g>
+    <rect x="-1500" y="1180" width="4080" height="64" fill="#13151a"/>
+    <rect x="-1500" y="1236" width="4080" height="8" fill="#2b2e36"/>
+    <rect x="-1500" y="1244" width="4080" height="900" fill="url(#roadG)"/>
+    <g id="lanes"></g>
+    <g id="lamps"></g>
+    <g id="skids"></g>
+    <g mask="url(#reflMask)" opacity=".22" filter="url(#blur6)"><use href="#c1wrap" transform="translate(0,2580) scale(1,-1)"/></g>
+    <g id="streaks"></g>
+    <g id="c1wrap" filter="url(#mblur)"><g id="c1" transform="translate(90,1018)"></g></g>
+    <g id="smoke" filter="url(#blur14)"></g>
+    <g id="dust"></g>
+  </g>
+</g>
+
+<!-- ================= SCENE: BUST ================= -->
+<g id="sBust" display="none">
+  <rect width="1080" height="1920" fill="#06080d"/>
+  <g id="bokeh" filter="url(#blur14)"></g>
+  <g id="bustCam"><use href="#ownerBustDef"/></g>
+  <path id="glint" d="M0,-60 L8,-8 L60,0 L8,8 L0,60 L-8,8 L-60,0 L-8,-8Z" fill="#fff" opacity="0"/>
+</g>
+
+<!-- ================= SCENE: KEY ================= -->
+<g id="sKey" display="none">
+  <rect width="1080" height="1920" fill="url(#spotG)"/>
+  <g id="keyDust"></g>
+  <g id="keyGhosts"></g>
+  <g id="fobWrap">
+    <g id="tagG">
+      <path d="M0,0 L0,70" stroke="#d6c9a8" stroke-width="4"/>
+      <rect x="-130" y="70" width="260" height="150" rx="20" fill="#f3efe6"/>
+      <circle cx="0" cy="92" r="9" fill="#06080d"/>
+      <text x="0" y="148" text-anchor="middle" font-size="36" font-weight="900" fill="#0a0c10" font-family="Inter Display, Inter">ПРИНЯТ</text>
+      <text x="0" y="186" text-anchor="middle" font-size="36" font-weight="900" fill="#0a0c10" font-family="Inter Display, Inter">В РАБОТУ</text>
+      <text x="0" y="210" text-anchor="middle" font-size="18" font-weight="700" fill="#3ec5ff" font-family="Inter" letter-spacing="3">BMW 5 · G30</text>
+    </g>
+    <use id="fobUse" href="#fobDef"/>
+  </g>
+  <circle id="ring1" cx="540" cy="900" r="10" fill="none" stroke="#3ec5ff" stroke-width="6" opacity="0"/>
+  <circle id="ring2" cx="540" cy="900" r="10" fill="none" stroke="#fff" stroke-width="3" opacity="0"/>
+</g>
+
+<!-- ================= SCENE: STUDIO ================= -->
+<g id="sStudio" display="none">
+  <g id="studioCam"><use href="#studioScene"/></g>
+  <g id="vf" opacity="0" fill="none" stroke="#fff" stroke-width="5">
+    <path d="M90,320 v-90 h90 M990,320 v-90 h-90 M90,1600 v90 h90 M990,1600 v90 h-90" opacity=".85"/>
+    <path d="M520,960 h40 M540,940 v40" stroke-width="3" opacity=".7"/>
+    <rect id="focus" x="0" y="0" width="200" height="200" stroke="#7CFF6B" stroke-width="4"/>
+  </g>
+  <g id="thumbs"></g>
+</g>
+
+<!-- ================= SCENE: PHONE ================= -->
+<g id="sPhone" display="none">
+  <rect width="1080" height="1920" fill="#07090e"/>
+  <circle cx="540" cy="980" r="620" fill="#3ec5ff" opacity=".10" filter="url(#blur30)"/>
+  <g id="phoneG">
+    <rect x="256" y="416" width="568" height="1148" rx="84" fill="#0c0e12" stroke="#2c313a" stroke-width="6"/>
+    <rect x="276" y="436" width="528" height="1108" rx="64" fill="#000"/>
+    <g clip-path="url(#screenClip)">
+      <rect x="276" y="436" width="528" height="1108" fill="#0a0a0a"/>
+      <text x="320" y="488" font-size="22" font-weight="700" fill="#fff" font-family="Inter">21:47</text>
+      <rect x="490" y="458" width="100" height="32" rx="16" fill="#000"/>
+      <rect x="730" y="472" width="40" height="18" rx="5" fill="none" stroke="#fff" stroke-width="2"/><rect x="733" y="475" width="28" height="12" rx="3" fill="#fff"/>
+      <circle cx="320" cy="560" r="26" fill="none" stroke="#ff5a36" stroke-width="4"/>
+      <circle cx="320" cy="560" r="19" fill="#3ec5ff"/>
+      <text x="360" y="568" font-size="24" font-weight="800" fill="#fff" font-family="Inter">ваш_ник</text>
+      <text x="760" y="566" font-size="28" font-weight="900" fill="#fff" font-family="Inter">···</text>
+      <g clip-path="url(#postClip)">
+        <g id="postImg" transform="translate(276,600) scale(0.4889) translate(0,-495)"><use href="#studioScene"/></g>
+      </g>
+      <g id="heartG" transform="translate(316,1300)">
+        <path id="heart" d="M0,8 C0,-6 -18,-14 -28,-2 C-38,-14 -56,-6 -56,8 C-56,24 -36,36 -28,44 C-20,36 0,24 0,8Z" transform="translate(28,-14)" fill="none" stroke="#fff" stroke-width="4"/>
+      </g>
+      <path d="M380,1290 a20,18 0 1 1 8,15 l-12,6 l4,-10" fill="none" stroke="#fff" stroke-width="4" transform="translate(4,0)"/>
+      <path d="M440,1282 l40,14 l-40,16 l8,-16 z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M752,1280 h26 v40 l-13,-10 l-13,10 z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+      <text id="likes" x="300" y="1370" font-size="24" font-weight="800" fill="#fff" font-family="Inter">Нравится: 0</text>
+      <text x="300" y="1408" font-size="22" fill="#fff" font-family="Inter"><tspan font-weight="800">ваш_ник</tspan> BMW 5 · G30. Без единой</text>
+      <text x="300" y="1438" font-size="22" fill="#fff" font-family="Inter">царапины, все ТО у дилера.</text>
+      <text id="cmts" x="300" y="1476" font-size="21" fill="#8a8f98" font-family="Inter">Смотреть все комментарии (0)</text>
+    </g>
+  </g>
+  <g id="hearts"></g>
+  <g id="dms"></g>
+</g>
+
+<!-- ================= SCENE: MAP ================= -->
+<g id="sMap" display="none">
+  <rect width="1080" height="1920" fill="#0a0d12"/>
+  <g id="mapCam">
+    <g id="mapBase"></g>
+    <path id="route" d="M140,420 L300,470 C360,490 380,520 370,580 L340,760 C330,820 360,850 420,860 L640,900 C700,912 720,950 712,1010 L700,1180" fill="none" stroke="#3ec5ff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="routeGlow" d="M140,420 L300,470 C360,490 380,520 370,580 L340,760 C330,820 360,850 420,860 L640,900 C700,912 720,950 712,1010 L700,1180" fill="none" stroke="#3ec5ff" stroke-width="34" stroke-linecap="round" opacity=".35" filter="url(#blur14)"/>
+    <circle cx="140" cy="420" r="22" fill="#ff5a36" stroke="#fff" stroke-width="5"/>
+    <g id="pinRipples"></g>
+    <g id="pin"><path d="M0,0 C-10,-30 -50,-56 -50,-96 a50,50 0 1 1 100,0 C50,-56 10,-30 0,0Z" fill="#3ec5ff"/><circle cx="0" cy="-96" r="20" fill="#03131c"/></g>
+    <g id="mover"><circle r="34" fill="#ff5a36" opacity=".35" filter="url(#blur6)"/><circle r="18" fill="#fff"/><circle r="11" fill="#ff5a36"/></g>
+  </g>
+</g>
+
+<!-- ================= SCENE: DEAL ================= -->
+<g id="sDeal" display="none">
+  <rect width="1080" height="1920" fill="#06080c"/>
+  <ellipse cx="540" cy="820" rx="600" ry="420" fill="#16324a" opacity=".5" filter="url(#blur30)"/>
+  <circle id="ringL" cx="290" cy="800" r="182" fill="none" stroke="#3ec5ff" stroke-width="6"/>
+  <circle id="ringR" cx="790" cy="800" r="182" fill="none" stroke="#ff5a36" stroke-width="6"/>
+  <g clip-path="url(#avClipL)"><rect x="100" y="610" width="380" height="380" fill="#0f2233"/><use href="#ownerBustDef" transform="translate(290,800) scale(.42) translate(-540,-1180)"/></g>
+  <g clip-path="url(#avClipR)"><rect x="600" y="610" width="380" height="380" fill="#2a1410"/><use href="#buyerBustDef" transform="translate(790,800) scale(.42) translate(-540,-1180)"/></g>
+  <text x="290" y="1050" text-anchor="middle" font-size="34" font-weight="800" letter-spacing="6" fill="#3ec5ff" font-family="Inter">ВЛАДЕЛЕЦ</text>
+  <text x="790" y="1050" text-anchor="middle" font-size="34" font-weight="800" letter-spacing="6" fill="#ff7a52" font-family="Inter">ПОКУПАТЕЛЬ</text>
+  <g id="bills"></g>
+  <g id="dealFob"><use href="#fobDef" transform="scale(.36)"/></g>
+  <g id="stamp" opacity="0">
+    <rect x="-300" y="-95" width="600" height="190" rx="22" fill="none" stroke="#ff4d3d" stroke-width="12"/>
+    <rect x="-280" y="-75" width="560" height="150" rx="12" fill="none" stroke="#ff4d3d" stroke-width="4"/>
+    <text x="0" y="40" text-anchor="middle" font-size="120" font-weight="900" fill="#ff4d3d" font-family="Inter Display, Inter" letter-spacing="4">ПРОДАНО</text>
+  </g>
+  <g id="chip" opacity="0">
+    <rect x="-150" y="-44" width="300" height="88" rx="44" fill="#3ec5ff"/>
+    <text x="0" y="16" text-anchor="middle" font-size="44" font-weight="900" fill="#03131c" font-family="Inter Display, Inter">+ наш %</text>
+  </g>
+</g>
+
+<!-- ================= SCENE: END ================= -->
+<g id="sEnd" display="none">
+  <rect width="1080" height="1920" fill="#030406"/>
+  <circle id="blobA" cx="200" cy="500" r="420" fill="#3ec5ff" opacity=".16" filter="url(#blur30)"/>
+  <circle id="blobB" cx="900" cy="1400" r="460" fill="#ff5a36" opacity=".12" filter="url(#blur30)"/>
+  <g id="outline" transform="translate(180,330) scale(.8)" fill="none" stroke="#3ec5ff" stroke-width="4" stroke-linecap="round">
+    <use id="outlineBody" href="#bodyPath"/>
+    <circle id="olw1" cx="170" cy="209" r="58"/><circle id="olw2" cx="712" cy="209" r="58"/>
+  </g>
+</g>
+</svg>
+
+<div class="layer" id="caps"></div>
+
+<div class="layer" id="ownerCard">
+  <div class="tag">ЗНАКОМЬТЕСЬ</div>
+  <h1>Владелец</h1>
+  <div class="row"><span class="k">Авто</span><span class="v">BMW 5 · G30</span></div>
+  <div class="row"><span class="k">Время на продажу</span><span class="v" id="oc1">24 ч</span><div class="bar"><i id="ob1"></i></div></div>
+  <div class="row"><span class="k">Терпение к торгу</span><span class="v" id="oc2">100%</span><div class="bar"><i id="ob2"></i></div></div>
+</div>
+
+<div class="layer" id="eta"><div class="av"></div><div><div class="t1">Покупатель</div><div class="t2" id="etaT">уже в пути</div></div><div class="min" id="etaM">12 мин</div></div>
+
+<div class="layer" id="hud"><div class="rec"><i id="recDot"></i>REC</div><div class="tc" id="tc">00:00:00:00</div><div class="info">ISO 100 · 1/250 · f/2.8 · RAW</div></div>
+
+<div class="layer" id="end">
+  <div class="step" id="st1" style="top:640px"><span class="n">01</span><span class="s">Привёз.</span></div>
+  <div class="step" id="st2" style="top:820px"><span class="n">02</span><span class="s">Сняли.</span></div>
+  <div class="step" id="st3" style="top:1000px"><span class="n">03</span><span class="s">Продали.</span></div>
+  <div class="fin" id="f1" style="top:700px;font-size:110px">Отдаёшь ключ.</div>
+  <div class="fin" id="f2" style="top:830px;font-size:110px;color:#3ec5ff">Получаешь деньги.</div>
+  <div class="fin" id="f3" style="top:1000px;font-size:46px;font-weight:600;letter-spacing:0;color:rgba(255,255,255,.7)">Всё, что между, — наша работа.</div>
+  <div id="pill">@ваш_ник</div>
+  <div id="dm">Пиши в директ <span id="arr" style="display:inline-block">→</span></div>
+</div>
+
+<div class="layer" id="leak"></div>
+<div class="layer" id="vig"></div>
+<canvas class="layer" id="grain" width="360" height="640"></canvas>
+<div class="layer" id="flash"></div>
+<div class="layer" id="dark"></div>
+</div>
+
+<script>
+const DUR = 44.5, FPS = 30;
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b) => cl((t - a) / (b - a));
+const lerp = (a, b, k) => a + (b - a) * k;
+const eOC = k => 1 - Math.pow(1 - k, 3);
+const eIC = k => k * k * k;
+const eIOC = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const eOQ = k => 1 - Math.pow(1 - k, 5);
+const eOB = k => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+function rng(s) { return () => (s = (s * 16807) % 2147483647, (s - 1) / 2147483646); }
+function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function A(e, attrs) { for (const k in attrs) e.setAttribute(k, attrs[k]); }
+function vis(e, on) { e.setAttribute('display', on ? 'inline' : 'none'); }
+
+/* ---------- build: spokes ---------- */
+(() => {
+  const g = $('spokesDef');
+  for (let i = 0; i < 5; i++) for (const off of [-8, 8]) {
+    el('path', { d: 'M-4,-10 L-3.5,-45 L3.5,-45 L4,-10 Z', fill: 'url(#rimG)', transform: `rotate(${i * 72 + off})` }, g);
+  }
+  el('circle', { r: 45, fill: 'none', stroke: 'url(#rimG)', 'stroke-width': 4 }, g);
+  el('circle', { r: 10, fill: '#1a1d22', stroke: '#9aa3ad', 'stroke-width': 2 }, g);
+})();
+
+function carMarkup(id, door) {
+  return `
+  <ellipse cx="455" cy="272" rx="490" ry="22" fill="url(#shadowG)"/>
+  <g id="${id}-beam" opacity="0"><path d="M24,158 L-900,40 L-900,330 L24,205 Z" fill="url(#beamG)"/></g>
+  <circle cx="170" cy="209" r="70" fill="#020304"/><circle cx="712" cy="209" r="70" fill="#020304"/>
+  <g transform="translate(170,209)"><use href="#wheelBack"/><use href="#caliperDef"/><g id="${id}-wf"><use href="#spokesDef"/></g></g>
+  <g transform="translate(712,209)"><use href="#wheelBack"/><use href="#caliperDef"/><g id="${id}-wr"><use href="#spokesDef"/></g></g>
+  <g id="${id}-pitch">
+    <use href="#carBodyDef"/>
+    ${door ? `
+    <path id="${id}-cav" d="M342,118 C380,90 420,58 470,34 L558,26 L560,240 L346,240 Z" fill="#07090d" opacity="0"/>
+    <g id="${id}-seat" opacity="0"><path d="M470,236 L470,150 C470,96 492,62 528,58 C548,58 556,80 552,110 L548,236Z" fill="#1d1a18"/><path d="M482,232 L482,152 C482,104 500,74 528,70" fill="none" stroke="#6b4a32" stroke-width="3" opacity=".7"/><rect x="380" y="150" width="70" height="10" rx="5" fill="#2a2f38"/></g>
+    <g id="${id}-door"><g clip-path="url(#doorClip)"><use href="#carBodyDef"/></g></g>
+    <g id="${id}-leg" opacity="0">
+      <path d="M452,150 L500,150 L512,296 L462,298 Z" fill="#23262e"/><path d="M462,150 L472,298" stroke="#000" stroke-width="2" opacity=".4"/>
+      <path d="M500,150 L512,296" stroke="#3ec5ff" stroke-width="3" opacity=".5"/>
+      <path d="M512,290 C512,302 506,310 486,310 L420,310 C404,310 400,300 410,294 L460,284 Z" fill="#eef1f4"/>
+      <path d="M402,306 L512,306" stroke="#9aa3ad" stroke-width="5"/>
+    </g>` : ''}
+    <g id="${id}-brake" opacity="0"><ellipse cx="878" cy="134" rx="70" ry="34" fill="url(#redGlow)"/></g>
+    <g id="${id}-head" opacity="1"><ellipse cx="44" cy="164" rx="96" ry="40" fill="url(#headGlow)"/></g>
+  </g>`;
+}
+$('c1').innerHTML = carMarkup('c1', true);
+$('c2').innerHTML = carMarkup('c2', false);
+
+/* ---------- build: street ---------- */
+(() => {
+  const r = rng(7), sky = $('skyline');
+  for (let layer = 0; layer < 2; layer++) {
+    let x = -1500;
+    while (x < 2600) {
+      const w = 60 + r() * 130, h = (layer ? 280 : 420) + r() * (layer ? 380 : 520);
+      const y = 1180 - h;
+      el('rect', { x, y, width: w, height: h, fill: layer ? '#0a0e19' : '#0e1426', opacity: layer ? 1 : .7 }, sky);
+      if (layer) {
+        for (let wy = y + 20; wy < 1160; wy += 26) for (let wx = x + 10; wx < x + w - 12; wx += 20) {
+          if (r() < .16) el('rect', { x: wx, y: wy, width: 9, height: 13, fill: r() < .8 ? '#ffcf7a' : '#bfe6ff', opacity: .35 + r() * .5 }, sky);
+        }
+      }
+      x += w + (layer ? 4 : 10);
+    }
+  }
+  const lanes = $('lanes');
+  for (let x = -1500; x < 2600; x += 180) el('rect', { x, y: 1262, width: 90, height: 6, fill: '#c9c2a8', opacity: .35 }, lanes);
+  el('rect', { x: -1500, y: 1720, width: 4080, height: 8, fill: '#c9c2a8', opacity: .18 }, lanes);
+  const lamps = $('lamps');
+  for (const x of [-420, 150, 930, 1500]) {
+    el('path', { d: `M${x + 60},560 L${x + 10},1240 L${x + 330},1240 L${x + 110},560Z`, fill: 'url(#coneG)' }, lamps);
+    el('rect', { x: x - 6, y: 520, width: 12, height: 718, fill: '#16191f' }, lamps);
+    el('path', { d: `M${x},530 C${x + 20},505 ${x + 60},505 ${x + 96},520`, stroke: '#16191f', 'stroke-width': 9, fill: 'none' }, lamps);
+    el('rect', { x: x + 66, y: 516, width: 60, height: 14, rx: 6, fill: '#ffe2b0' }, lamps);
+    el('ellipse', { cx: x + 96, cy: 524, rx: 70, ry: 30, fill: '#ffc277', opacity: .45, filter: 'url(#blur14)' }, lamps);
+    el('ellipse', { cx: x + 150, cy: 1250, rx: 240, ry: 40, fill: 'url(#warmPool)' }, lamps);
+  }
+  const sk = $('skids');
+  for (const i of [0, 1]) el('rect', { id: 'skid' + i, x: 0, y: 1284, width: 0, height: 12, rx: 6, fill: '#000', opacity: .6 }, sk);
+  const st = $('streaks');
+  const r2 = rng(19);
+  for (let i = 0; i < 18; i++) el('rect', { 'data-dy': 1040 + r2() * 250, 'data-len': 200 + r2() * 600, 'data-off': r2() * 400, x: 0, y: 0, width: 0, height: 2 + r2() * 3, fill: '#cfe9ff', opacity: 0 }, st);
+  const sm = $('smoke');
+  for (let i = 0; i < 26; i++) el('circle', { r: 0, fill: '#c8ccd4', opacity: 0 }, sm);
+  const du = $('dust');
+  for (let i = 0; i < 10; i++) el('circle', { r: 0, fill: '#9aa0a8', opacity: 0 }, du);
+})();
+
+/* ---------- build: bokeh / key dust / thumbs / dms / map / bills ---------- */
+(() => {
+  const r = rng(3), b = $('bokeh');
+  const cols = ['#3ec5ff', '#ff7a3d', '#ffcf7a', '#8a7dff', '#ffffff'];
+  for (let i = 0; i < 26; i++) el('circle', { cx: r() * 1080, cy: 200 + r() * 1300, r: 30 + r() * 90, fill: cols[i % 5], opacity: .12 + r() * .25 }, b);
+  const kd = $('keyDust');
+  for (let i = 0; i < 40; i++) el('circle', { 'data-x': r() * 1080, 'data-y': r() * 1920, 'data-s': .3 + r(), r: 1.5 + r() * 3, fill: '#bfe6ff', opacity: .25 + r() * .4 }, kd);
+  const kg = $('keyGhosts');
+  for (let i = 0; i < 6; i++) el('use', { href: '#fobDef', opacity: 0 }, kg);
+  const th = $('thumbs');
+  for (let i = 0; i < 4; i++) {
+    const g = el('g', { id: 'th' + i, opacity: 0 }, th);
+    el('rect', { x: -14, y: -14, width: 1108, height: 1378, rx: 52, fill: '#f4f1ea' }, g);
+    const c = el('g', { 'clip-path': 'url(#thumbClip)' }, g);
+    el('g', { id: 'thc' + i }, c).appendChild(el('use', { href: '#studioScene' }));
+  }
+  const dms = $('dms');
+  const msgs = [['Арсен', 'Ещё в продаже?'], ['Дина', 'Можно сегодня посмотреть?'], ['Тимур', 'Беру. Скиньте адрес']];
+  const ac = ['#ff5a36', '#8a7dff', '#2ecc71'];
+  msgs.forEach((m, i) => {
+    const g = el('g', { id: 'dm' + i, opacity: 0 }, dms);
+    el('rect', { x: 180, y: 0, width: 720, height: 128, rx: 34, fill: '#1c1f26', stroke: 'rgba(255,255,255,.08)', 'stroke-width': 2 }, g);
+    el('circle', { cx: 250, cy: 64, r: 38, fill: ac[i] }, g);
+    el('text', { x: 310, y: 52, 'font-size': 26, 'font-weight': 700, fill: 'rgba(255,255,255,.6)', 'font-family': 'Inter' }, g).textContent = m[0] + ' · сейчас';
+    el('text', { x: 310, y: 94, 'font-size': 34, 'font-weight': 800, fill: '#fff', 'font-family': 'Inter' }, g).textContent = m[1];
+  });
+  const badge = el('g', { id: 'badge', opacity: 0 }, dms);
+  el('rect', { x: -110, y: -40, width: 220, height: 80, rx: 40, fill: '#ff3b30' }, badge);
+  el('text', { x: 0, y: 14, 'text-anchor': 'middle', 'font-size': 38, 'font-weight': 900, fill: '#fff', 'font-family': 'Inter' }, badge).textContent = '+46 в директ';
+  A(badge, {});
+  const hs = $('hearts');
+  for (let i = 0; i < 14; i++) el('path', { d: 'M0,8 C0,-6 -18,-14 -28,-2 C-38,-14 -56,-6 -56,8 C-56,24 -36,36 -28,44 C-20,36 0,24 0,8Z', fill: i % 3 ? '#ff3b5c' : '#ff7a9a', opacity: 0 }, hs);
+  // map
+  const mb = $('mapBase');
+  el('path', { d: 'M-200,1500 C200,1300 400,1350 600,1250 C800,1150 900,1000 1300,950 L1300,1100 C950,1150 850,1300 650,1400 C450,1500 250,1450 -200,1650Z', fill: '#0e1b2c' }, mb);
+  const g2 = el('g', { transform: 'rotate(-8 540 960)' }, mb);
+  for (let x = -400; x < 1600; x += 120) el('rect', { x, y: -300, width: x % 360 === 80 ? 18 : 8, height: 2600, fill: '#1a212c' }, g2);
+  for (let y = -300; y < 2400; y += 140) el('rect', { x: -400, y, width: 2000, height: y % 420 === 120 ? 18 : 8, fill: '#1a212c' }, g2);
+  const r3 = rng(11);
+  for (let i = 0; i < 40; i++) el('rect', { x: -300 + Math.floor(r3() * 14) * 120 + 20, y: -200 + Math.floor(r3() * 18) * 140 + 22, width: 76, height: 92, rx: 8, fill: '#121820' }, g2);
+  const bl = $('bills');
+  for (let i = 0; i < 10; i++) {
+    const g = el('g', { opacity: 0 }, bl);
+    el('rect', { x: -100, y: -48, width: 200, height: 96, rx: 8, fill: 'url(#billG)', stroke: '#7d9a70', 'stroke-width': 2 }, g);
+    el('rect', { x: -86, y: -36, width: 172, height: 72, rx: 5, fill: 'none', stroke: '#7d9a70', 'stroke-width': 2, opacity: .6 }, g);
+    el('circle', { cx: 0, cy: 0, r: 22, fill: 'none', stroke: '#6b8a5e', 'stroke-width': 3 }, g);
+  }
+  for (let i = 0; i < 5; i++) el('circle', { r: 10, fill: 'none', stroke: '#3ec5ff', 'stroke-width': 4, opacity: 0 }, $('pinRipples'));
+})();
+
+/* ---------- captions ---------- */
+const CAPS = [
+  [0.25, 1.35, 300, 'kick', 'Пятница · 21:47'],
+  [1.75, 3.2, 1430, 'big', 'Приехал *эффектно.*'],
+  [2.25, 3.2, 1555, 'mid', 'Уехать хочет — *с деньгами.*'],
+  [9.1, 10.55, 1360, 'big', 'Ключ — *у нас.*'],
+  [9.5, 10.55, 1480, 'mid', 'А с ним — вся возня с продажей.'],
+  [10.95, 12.1, 1480, 'huge', 'Свет.'],
+  [12.45, 13.55, 1480, 'huge', 'Ракурс.'],
+  [13.95, 14.95, 1480, 'huge', 'Детали.'],
+  [15.4, 16.3, 1520, 'big', 'И ещё раз *детали.*'],
+  [17.0, 19.1, 1470, 'mid', 'Не «фото с парковки».'],
+  [17.4, 19.1, 1560, 'mid', 'Кадры, после которых *пишут в директ.*'],
+  [22.9, 25.1, 200, 'big', 'Пост вышел —'],
+  [23.3, 25.1, 310, 'big', '*директ проснулся.*'],
+  [26.0, 28.9, 1420, 'mid', 'Едет не «посмотреть».'],
+  [26.6, 28.9, 1520, 'big', '*Едет забирать.*'],
+  [32.9, 34.95, 1370, 'mid', 'Деньги — владельцу.'],
+  [33.3, 34.95, 1455, 'mid', 'Ключи — новому хозяину.'],
+  [33.9, 34.95, 1590, 'mid', 'Нам — процент. *Всем — без нервов.*'],
+  [35.9, 37.55, 1440, 'big', 'Следующая — *твоя?*'],
+];
+const capEls = CAPS.map(([t0, t1, y, cls, txt]) => {
+  const d = document.createElement('div');
+  d.className = 'cap ' + cls; d.style.top = y + 'px'; d.style.opacity = 0;
+  let acc = false;
+  txt.split(/(\*)/).forEach(part => {
+    if (part === '*') { acc = !acc; return; }
+    part.split(/(\s+)/).forEach(w => {
+      if (!w) return;
+      if (/^\s+$/.test(w)) { d.appendChild(document.createTextNode(' ')); return; }
+      const s = document.createElement('span'); s.className = 'w' + (acc ? ' a' : ''); s.textContent = w; d.appendChild(s);
+    });
+  });
+  $('caps').appendChild(d);
+  return { t0, t1, cls, d, words: [...d.querySelectorAll('.w')] };
+});
+function renderCaps(t) {
+  for (const c of capEls) {
+    if (t < c.t0 - .01 || t > c.t1 + .01) { c.d.style.opacity = 0; continue; }
+    c.d.style.opacity = 1;
+    const out = P(t, c.t1 - .28, c.t1);
+    c.words.forEach((w, i) => {
+      if (c.cls === 'huge') {
+        const k = P(t, c.t0, c.t0 + .32), e = eOC(k);
+        w.style.transform = `scale(${lerp(1.7, 1, e) + (t - c.t0) * .04}) translateY(${-out * 60}px)`;
+        w.style.opacity = e * (1 - out);
+        w.style.filter = `blur(${(1 - e) * 18 + out * 10}px)`;
+      } else {
+        const k = P(t, c.t0 + i * .065, c.t0 + i * .065 + .45), e = eOC(k);
+        w.style.transform = `translateY(${(1 - e) * 70 - out * 40}px) rotate(${(1 - e) * 5}deg)`;
+        w.style.opacity = e * (1 - out);
+        w.style.filter = `blur(${(1 - e) * 10 + out * 6}px)`;
+      }
+    });
+  }
+}
+
+/* ---------- grain ---------- */
+const gctx = $('grain').getContext('2d');
+const gimg = gctx.createImageData(360, 640);
+function renderGrain(frame) {
+  const r = rng(1000 + (frame % 24) * 97), d = gimg.data;
+  for (let i = 0; i < d.length; i += 4) { const v = r() * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+  gctx.putImageData(gimg, 0, 0);
+}
+
+/* ---------- street car kinematics ---------- */
+const STOP_X = 90, ARRIVE = 1.62;
+function carX(t) {
+  if (t < 30) {
+    const u = cl(t / ARRIVE);
+    return STOP_X + 2500 * Math.pow(1 - u, 2);
+  }
+  const u = P(t, 35.55, 37.0);
+  return STOP_X - 2600 * Math.pow(u, 2.2);
+}
+function renderStreet(t) {
+  const x = carX(t), v = (carX(t) - carX(t - 1 / FPS)) * FPS; // px/s
+  const sp = Math.abs(v);
+  // camera
+  let k = 1, fx = 540, fy = 960, tx = 540, ty = 960;
+  if (t > 3.0 && t < 6) { const z = eIOC(P(t, 3.1, 3.85)); k = 1 + 1.25 * z; fx = lerp(540, 540, z); fy = lerp(960, 1200, z); ty = lerp(960, 1020, z); }
+  if (t > 35) { const z = 1 - eOC(P(t, 35.05, 35.6)); k = 1 + .15 * z; }
+  let sx = 0, sy = 0;
+  const shake = (a, b, amp) => { if (t > a && t < b) { const d = 1 - P(t, a, b); sx += Math.sin(t * 93) * amp * d; sy += Math.cos(t * 71) * amp * .7 * d; } };
+  shake(1.6, 2.05, 16); shake(35.55, 36.2, 6); shake(4.18, 4.4, 5);
+  A($('streetCam'), { transform: `translate(${tx + sx},${ty + sy}) scale(${k}) translate(${-fx},${-fy})` });
+  // car
+  let pitch = 0;
+  if (t < 30) {
+    if (t > 1.1 && t < ARRIVE) pitch = -2.4 * eOC(P(t, 1.1, ARRIVE));
+    else if (t >= ARRIVE) { const a = t - ARRIVE; pitch = -2.4 * Math.cos(a * 11) * Math.exp(-a * 4.5); }
+  } else if (t > 35.55) { const a = t - 35.55; pitch = 1.6 * Math.min(1, a * 4) * Math.exp(-a * 1.5); }
+  A($('c1'), { transform: `translate(${x},1018)` });
+  A($('c1-pitch'), { transform: `rotate(${pitch} 170 240)` });
+  const rot = -(x / 63) * 180 / Math.PI;
+  A($('c1-wf'), { transform: `rotate(${rot})` }); A($('c1-wr'), { transform: `rotate(${rot})` });
+  A($('mblurFE'), { stdDeviation: `${Math.min(46, sp * .014)} 0` });
+  A($('c1-beam'), { opacity: .9 });
+  const braking = (t > 1.05 && t < 2.6) || (t > 35.05 && t < 35.5);
+  A($('c1-brake'), { opacity: braking ? 1 : (t > 35.5 ? .65 : .35) });
+  A($('c1-head'), { opacity: t > 35.2 && t < 35.45 ? (Math.sin((t - 35.2) * 50) > 0 ? 1.4 : .5) : 1 });
+  // skids
+  const xb = carX(1.08);
+  [170, 712].forEach((wx, i) => {
+    const s = $('skid' + i);
+    if (t > 1.08 && t < 6) { const a = x + wx, b = xb + wx; A(s, { x: a, width: Math.max(0, b - a), opacity: .55 }); }
+    else A(s, { width: 0 });
+  });
+  // streaks
+  [...$('streaks').children].forEach(r => {
+    const len = +r.dataset.len * cl(sp / 2500), y = +r.dataset.dy, off = +r.dataset.off;
+    const dir = t < 30 ? 1 : 1;
+    A(r, { x: x + 820 + off * dir, y, width: len, opacity: cl(sp / 2200) * .5 });
+  });
+  // smoke
+  const rs = rng(5);
+  [...$('smoke').children].forEach((c, i) => {
+    const rr = rs(), rr2 = rs();
+    let tb, wx;
+    if (i < 20) { tb = 1.1 + i * .026; wx = i % 2 ? 712 : 170; }
+    else { tb = 35.55 + (i - 20) * .05; wx = 712; }
+    const a = t - tb;
+    if (a < 0 || a > 3.2) { A(c, { opacity: 0 }); return; }
+    const bx = carX(tb) + wx + rr * 40 - 20;
+    A(c, { cx: bx + a * (50 + rr2 * 90), cy: 1275 - a * (40 + rr * 50), r: 26 + a * 120 * (0.6 + rr2 * .6), opacity: .5 * Math.exp(-a * 1.15) * Math.min(1, a * 10) });
+  });
+  // door / leg
+  const op = eIOC(P(t, 3.5, 4.05)) * (t < 30 ? 1 : 0);
+  A($('c1-door'), { transform: `translate(342,0) scale(${lerp(1, .14, op)},${lerp(1, 1.04, op)}) translate(-342,0)` });
+  A($('c1-cav'), { opacity: op > 0 ? 1 : 0 }); A($('c1-seat'), { opacity: op });
+  const lg = eOC(P(t, 3.85, 4.2));
+  A($('c1-leg'), { opacity: t < 30 ? cl(lg * 3) : 0, transform: `translate(${(1 - lg) * 30},${(1 - lg) * -90})` });
+  const r4 = rng(9);
+  [...$('dust').children].forEach((c, i) => {
+    const a = t - 4.18, ang = Math.PI + r4() * Math.PI, sp2 = 40 + r4() * 90;
+    if (a < 0 || a > 1 || t > 30) { A(c, { opacity: 0 }); return; }
+    A(c, { cx: STOP_X + 460 + Math.cos(ang) * sp2 * a * 2, cy: 1018 + 306 + Math.sin(ang) * sp2 * a, r: 3 + a * 10, opacity: .5 * (1 - a) });
+  });
+}
+
+/* ---------- bust ---------- */
+function renderBust(t) {
+  const u = P(t, 4.65, 7.45);
+  A($('bustCam'), { transform: `translate(540,1100) scale(${1.02 + u * .08}) rotate(${-1 + u * 2}) translate(-540,-1080)` });
+  [...$('bokeh').children].forEach((c, i) => A(c, { transform: `translate(${Math.sin(t * .6 + i) * 20 - u * 60},0)` }));
+  const g = P(t, 5.15, 5.75);
+  A($('lensSweep'), { x: g > 0 && g < 1 ? lerp(300, 820, eIOC(g)) : 2000 });
+  const gl = Math.sin(P(t, 5.25, 5.75) * Math.PI);
+  A($('glint'), { opacity: gl, transform: `translate(${lerp(470, 640, P(t, 5.25, 5.75))},${975}) scale(${.2 + gl * .55}) rotate(${t * 90})` });
+  const card = $('ownerCard');
+  const ci = eOC(P(t, 4.9, 5.4)), co = P(t, 7.15, 7.45);
+  card.style.opacity = (t > 4.6 && t < 7.5) ? ci * (1 - co) : 0;
+  card.style.transform = `translateX(${(1 - ci) * -80}px)`;
+  const d1 = eIOC(P(t, 5.6, 6.6)), d2 = eIOC(P(t, 6.0, 7.0));
+  $('oc1').textContent = Math.round(24 * (1 - d1)) + ' ч'; $('ob1').style.width = (100 * (1 - d1)) + '%';
+  $('oc2').textContent = Math.round(100 * (1 - d2)) + '%'; $('ob2').style.width = (100 * (1 - d2)) + '%';
+}
+
+/* ---------- key ---------- */
+function fobPos(tt) {
+  // bezier toss with slow-mo near apex
+  const raw = P(tt, 7.55, 8.95);
+  const u = raw < .5 ? .5 * Math.pow(raw * 2, .55) : .5 + .5 * eOC((raw - .5) * 2) ; // fast in, slow middle
+  const p0 = [-260, 1500], p1 = [260, 300], p2 = [620, 900];
+  const x = (1 - u) * (1 - u) * p0[0] + 2 * (1 - u) * u * p1[0] + u * u * p2[0];
+  const y = (1 - u) * (1 - u) * p0[1] + 2 * (1 - u) * u * p1[1] + u * u * p2[1];
+  const rot = (1 - eOC(raw)) * -560;
+  const sc = lerp(.55, 1, eOC(raw));
+  return [x, y, rot, sc];
+}
+function renderKey(t) {
+  const [x, y, rot, sc] = fobPos(t);
+  const land = t - 8.95;
+  let bounce = land > 0 ? Math.sin(land * 14) * 18 * Math.exp(-land * 5) : 0;
+  const settle = land > 0 ? 1 + .05 * Math.sin(land * 16) * Math.exp(-land * 6) : 1;
+  A($('fobWrap'), { transform: `translate(${x},${y + bounce}) rotate(${rot}) scale(${sc * settle})` });
+  const sw = land > 0 ? 52 * Math.cos(land * 6.5) * Math.exp(-land * 2.2) : 75;
+  A($('tagG'), { transform: `translate(0,-196) rotate(${28 + sw})`, opacity: land > -.02 ? cl(land * 6 + .2) : 0 });
+  [...$('keyGhosts').children].forEach((g, i) => {
+    const [gx, gy, gr, gs] = fobPos(t - (i + 1) * .035);
+    const on = t > 7.6 && t < 8.95;
+    A(g, { transform: `translate(${gx},${gy}) rotate(${gr}) scale(${gs})`, opacity: on ? .22 * (1 - i / 6) : 0 });
+  });
+  [['ring1', 0, 380, 6], ['ring2', .06, 520, 3]].forEach(([id, dl, R, w]) => {
+    const a = P(t, 8.95 + dl, 9.6 + dl);
+    A($(id), { cx: 620, cy: 900, r: 20 + eOC(a) * R, opacity: a > 0 && a < 1 ? (1 - a) : 0, 'stroke-width': w * (1 - a) + .5 });
+  });
+  [...$('keyDust').children].forEach(c => {
+    const s = +c.dataset.s;
+    A(c, { cx: (+c.dataset.x + t * 20 * s) % 1080, cy: (+c.dataset.y - t * 40 * s + 3840) % 1920 });
+  });
+}
+
+/* ---------- studio ---------- */
+const CAM = { wide: [540, 1170, 1], head: [150, 1206, 2.7], wheel: [802, 1247, 3.1], tail: [960, 1176, 2.9] };
+const SHOTS = [ // time, cam
+  [10.6, [540, 1180, 1.18]], [12.05, CAM.wide], [12.3, CAM.wide], [12.75, CAM.head], [13.6, [175, 1200, 2.85]],
+  [14.15, CAM.wheel], [15.0, [790, 1247, 3.25]], [15.55, CAM.tail], [16.3, [950, 1176, 3.0]], [17.0, [540, 1170, .95]], [19.3, [540, 1170, .9]],
+];
+function camAt(t) {
+  if (t <= SHOTS[0][0]) return SHOTS[0][1];
+  for (let i = 0; i < SHOTS.length - 1; i++) {
+    const [t0, a] = SHOTS[i], [t1, b] = SHOTS[i + 1];
+    if (t <= t1) { const k = eIOC(P(t, t0, t1)); return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; }
+  }
+  return SHOTS[SHOTS.length - 1][1];
+}
+const camTf = c => `translate(540,960) scale(${c[2]}) translate(${-c[0]},${-c[1]})`;
+const FLASHES = [12.15, 13.55, 15.0, 16.28];
+const GRID = [[150, 470, -4], [570, 470, 3], [150, 950, 2.5], [570, 950, -3]];
+function renderStudio(t) {
+  const c = camAt(t);
+  A($('studioCam'), { transform: camTf(c) });
+  A($('lightL'), { opacity: t > 10.78 ? 1 : 0 }); A($('lightR'), { opacity: t > 11.0 ? 1 : 0 });
+  A($('lightTop'), { opacity: t > 11.25 ? (t < 11.32 ? .4 : 1) : 0 });
+  A($('studioDark'), { opacity: t < 10.78 ? .93 : t < 11.0 ? .6 : t < 11.25 ? .38 : .0 });
+  A($('sweepRect'), { x: t > 11.3 && t < 12.6 ? lerp(-500, 1300, eIOC(P(t, 11.3, 12.4))) : (t > 16.9 && t < 18.5 ? lerp(-500, 1300, eIOC(P(t, 16.9, 18.3))) : -800) });
+  const vfOn = t > 10.7 && t < 16.6;
+  A($('vf'), { opacity: vfOn ? 1 : 0 });
+  $('hud').style.opacity = vfOn ? 1 : 0;
+  $('recDot').style.opacity = Math.floor(t * 2) % 2 ? .25 : 1;
+  const fr = Math.floor((t - 10.6) * 25);
+  $('tc').textContent = `00:00:${String(Math.floor(fr / 25) % 60).padStart(2, '0')}:${String(fr % 25).padStart(2, '0')}`;
+  // focus box: contract before each flash
+  let fsz = 220, fcol = '#7CFF6B';
+  for (const f of FLASHES) { const a = P(t, f - .35, f); if (t > f - .35 && t < f + .25) { fsz = lerp(300, 170, eOC(a)); fcol = a >= 1 ? '#fff' : '#7CFF6B'; } }
+  A($('focus'), { x: 540 - fsz / 2, y: 960 - fsz / 2, width: fsz, height: fsz, stroke: fcol });
+  // thumbnails
+  FLASHES.forEach((f, i) => {
+    const g = $('th' + i);
+    if (t < f) { A(g, { opacity: 0 }); return; }
+    A($('thc' + i), { transform: `translate(0,-285) ${camTf(camAt(f))}` });
+    // stage A: fly to strip; stage B: grid; stage C: collapse to phone
+    const a = eOC(P(t, f, f + .45));
+    const sx0 = 540 - 540 * .9, sy0 = 960 - 675 * .9; // full-size-ish start
+    const strip = [110 + i * 220, 1620, .18, 0];
+    const gpos = GRID[i];
+    const b = eIOC(P(t, 16.55, 17.15));
+    const cc = eIOC(P(t, 18.75, 19.25));
+    let X = lerp(sx0, strip[0], a), Y = lerp(sy0, strip[1], a), S = lerp(.9, strip[2], a), R = lerp(0, (i % 2 ? 3 : -3), a);
+    X = lerp(X, gpos[0], b); Y = lerp(Y, gpos[1], b); S = lerp(S, .333, b); R = lerp(R, gpos[2], b);
+    X = lerp(X, 276, cc); Y = lerp(Y, 600, cc); S = lerp(S, .4889, cc); R = lerp(R, 0, cc);
+    A(g, { opacity: (t < f + .02 ? 0 : 1) * (1 - (i > 0 ? cc : 0)), transform: `translate(${X},${Y}) rotate(${R}) scale(${S})` });
+  });
+}
+
+/* ---------- phone ---------- */
+function renderPhone(t) {
+  const e = eOB(P(t, 19.25, 19.8));
+  A($('phoneG'), { transform: `translate(540,990) scale(${lerp(.92, 1, e)}) rotate(${lerp(-3, 0, e) + Math.sin(t * .8) * .6}) translate(-540,-990)` });
+  const lk = P(t, 20.0, 24.6);
+  $('likes').textContent = 'Нравится: ' + Math.round(3412 * eOC(lk)).toLocaleString('ru-RU');
+  $('cmts').textContent = `Смотреть все комментарии (${Math.round(128 * eOC(lk))})`;
+  const hp = P(t, 20.0, 20.35);
+  A($('heart'), { fill: t > 20 ? '#ff3b5c' : 'none', stroke: t > 20 ? '#ff3b5c' : '#fff' });
+  A($('heartG'), { transform: `translate(316,1300) scale(${1 + Math.sin(hp * Math.PI) * .5})` });
+  const rh = rng(21);
+  [...$('hearts').children].forEach((h, i) => {
+    const tb = 20.1 + i * .3, a = (t - tb) / 1.6, dx = (rh() - .5) * 200, sc = .6 + rh() * .6;
+    if (a < 0 || a > 1) { A(h, { opacity: 0 }); return; }
+    A(h, { opacity: Math.sin(a * Math.PI), transform: `translate(${350 + dx * a + Math.sin(a * 8 + i) * 20},${1290 - a * 700}) scale(${sc})` });
+  });
+  [20.6, 21.3, 22.0].forEach((tb, i) => {
+    const g = $('dm' + i), a = eOB(P(t, tb, tb + .4));
+    const push = [21.3, 22.0].filter(x => t > x && x > tb).length;
+    const Y = lerp(300, 460, a) + i * 148;
+    A(g, { opacity: cl((t - tb) * 5), transform: `translate(540,${Y + 64}) scale(${lerp(.8, 1, a)}) translate(-540,-64)` });
+  });
+  // keep transform origin simple: scale from left; good enough
+  const bb = eOB(P(t, 22.6, 23.0));
+  A($('badge'), { opacity: t > 22.6 ? 1 : 0, transform: `translate(780,920) scale(${bb})` });
+}
+
+/* ---------- map ---------- */
+const routeEl = $('route'); let RL = 0;
+function renderMap(t) {
+  if (!RL) RL = routeEl.getTotalLength();
+  const u = eIOC(P(t, 25.6, 27.6));
+  A($('mapCam'), { transform: `translate(540,960) scale(${1.05 + P(t, 25.25, 29.05) * .12}) translate(-540,-900)` });
+  A(routeEl, { 'stroke-dasharray': RL, 'stroke-dashoffset': RL * (1 - u) });
+  A($('routeGlow'), { 'stroke-dasharray': RL, 'stroke-dashoffset': RL * (1 - u) });
+  const p = routeEl.getPointAtLength(RL * u);
+  A($('mover'), { transform: `translate(${p.x},${p.y})` });
+  const pd = eOB(P(t, 25.4, 25.85));
+  A($('pin'), { transform: `translate(700,1180) translate(0,${(1 - pd) * -200}) scale(${pd})`, opacity: t > 25.4 ? 1 : 0 });
+  [...$('pinRipples').children].forEach((c, i) => {
+    const a = P(t, 27.6 + i * .18, 28.6 + i * .18);
+    A(c, { cx: 700, cy: 1180, r: 10 + a * 220, opacity: a > 0 && a < 1 ? 1 - a : 0 });
+  });
+  const eta = $('eta'), ei = eOC(P(t, 25.4, 25.8));
+  eta.style.opacity = (t > 25.25 && t < 29.1) ? ei * (1 - P(t, 28.8, 29.05)) : 0;
+  eta.style.transform = `translateY(${(1 - ei) * -40}px)`;
+  const mins = Math.max(0, Math.round(12 * (1 - u)));
+  $('etaM').textContent = u >= 1 ? '✓' : mins + ' мин';
+  $('etaT').textContent = u >= 1 ? 'на месте' : 'уже в пути';
+}
+
+/* ---------- deal ---------- */
+function arc(a, b, k, h) { return [lerp(a[0], b[0], k), lerp(a[1], b[1], k) - Math.sin(k * Math.PI) * h]; }
+function renderDeal(t) {
+  [...$('bills').children].forEach((g, i) => {
+    const tb = 29.5 + i * .12, k = P(t, tb, tb + .6);
+    if (t < tb || k >= 1) { A(g, { opacity: 0 }); return; }
+    const e = eIOC(k), [x, y] = arc([790, 820], [290, 820], e, 300 + (i % 3) * 40);
+    A(g, { opacity: 1, transform: `translate(${x},${y}) rotate(${-20 + k * 40 + i * 7}) scale(${.7},${.7 * Math.cos(k * Math.PI * 2 + i)})` });
+  });
+  const pulseL = Math.max(...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => { const a = t - (30.1 + i * .12); return a > 0 && a < .3 ? 1 - a / .3 : 0; }));
+  A($('ringL'), { 'stroke-width': 6 + pulseL * 8, r: 182 + pulseL * 10 });
+  const kk = P(t, 31.0, 31.8), ke = eIOC(kk);
+  const [fx, fy] = arc([290, 820], [790, 820], ke, 340);
+  A($('dealFob'), { opacity: t > 30.95 && t < 32.0 ? 1 : 0, transform: `translate(${fx},${fy}) rotate(${(1 - ke) * 540})` });
+  const pr = t > 31.8 && t < 32.2 ? 1 - (t - 31.8) / .4 : 0;
+  A($('ringR'), { 'stroke-width': 6 + pr * 10, r: 182 + pr * 12 });
+  const s = P(t, 32.1, 32.32), se = eIC(s);
+  const sh = t > 32.32 && t < 32.7 ? Math.sin(t * 120) * 8 * (1 - P(t, 32.32, 32.7)) : 0;
+  A($('stamp'), { opacity: t > 32.1 ? 1 : 0, transform: `translate(${540 + sh},${1200}) rotate(-9) scale(${lerp(2.6, 1, se)})` });
+  const ch = eOB(P(t, 32.7, 33.1));
+  A($('chip'), { opacity: t > 32.7 ? .0 : 0, transform: `translate(540,1640) scale(${ch})` });
+}
+
+/* ---------- end ---------- */
+let OL = 0;
+function renderEnd(t) {
+  if (!OL) OL = $('bodyPath').getTotalLength();
+  $('end').style.opacity = t > 37.65 ? 1 : 0;
+  A($('blobA'), { cx: 200 + Math.sin(t * .7) * 80, cy: 500 + Math.cos(t * .5) * 60 });
+  A($('blobB'), { cx: 900 + Math.cos(t * .6) * 80, cy: 1400 + Math.sin(t * .4) * 60 });
+  [['st1', 37.8], ['st2', 38.2], ['st3', 38.6]].forEach(([id, tb]) => {
+    const e = eOC(P(t, tb, tb + .5)), o = eIC(P(t, 39.9, 40.25));
+    const n = $(id);
+    n.style.opacity = e * (1 - o);
+    n.style.transform = `translateX(${(1 - e) * -120 + o * 160}px)`;
+    n.style.filter = `blur(${(1 - e) * 10 + o * 12}px)`;
+  });
+  [['f1', 40.25], ['f2', 40.65], ['f3', 41.2]].forEach(([id, tb]) => {
+    const e = eOC(P(t, tb, tb + .55)), n = $(id);
+    n.style.opacity = e; n.style.transform = `translateY(${(1 - e) * 50}px)`; n.style.filter = `blur(${(1 - e) * 10}px)`;
+  });
+  const d = eIOC(P(t, 40.0, 41.6));
+  A($('outlineBody'), { 'stroke-dasharray': OL, 'stroke-dashoffset': OL * (1 - d) });
+  const wl = 2 * Math.PI * 58;
+  ['olw1', 'olw2'].forEach(id => A($(id), { 'stroke-dasharray': wl, 'stroke-dashoffset': wl * (1 - eIOC(P(t, 40.8, 41.6))) }));
+  A($('outline'), { opacity: t > 39.95 ? 1 : 0 });
+  const pe = eOB(P(t, 41.8, 42.2));
+  $('pill').style.opacity = P(t, 41.8, 41.95);
+  $('pill').style.transform = `translateX(-50%) scale(${pe})`;
+  const dm = eOC(P(t, 42.2, 42.6));
+  $('dm').style.opacity = dm; $('dm').style.transform = `translateY(${(1 - dm) * 30}px)`;
+  $('arr').style.transform = `translateX(${Math.max(0, Math.sin((t - 42.6) * 6)) * 14}px)`;
+}
+
+/* ---------- master ---------- */
+const SC = [
+  ['sStreet', 0, 4.65], ['sBust', 4.65, 7.45], ['sKey', 7.45, 10.65], ['sStudio', 10.65, 19.25],
+  ['sPhone', 19.25, 25.25], ['sMap', 25.25, 29.05], ['sDeal', 29.05, 35.05], ['sStreet2', 35.05, 37.65], ['sEnd', 37.65, 99],
+];
+const CUTS = [4.65, 7.45, 10.65, 25.25, 29.05, 35.05, 37.65];
+function render(t) {
+  const on = n => SC.some(([id, a, b]) => id.startsWith(n) && t >= a && t < b);
+  const street = on('sStreet');
+  vis($('sStreet'), street); vis($('sBust'), on('sBust')); vis($('sKey'), on('sKey')); vis($('sStudio'), on('sStudio') || on('sPhone') && false);
+  vis($('sPhone'), on('sPhone')); vis($('sMap'), on('sMap')); vis($('sDeal'), on('sDeal')); vis($('sEnd'), on('sEnd'));
+  if (street) renderStreet(t);
+  renderBust(t);
+  if (on('sKey')) renderKey(t);
+  renderStudio(t); // drives shared studioScene (also used by phone)
+  if (on('sPhone')) renderPhone(t);
+  renderMap(t);
+  if (on('sDeal')) renderDeal(t);
+  renderEnd(t);
+  renderCaps(t);
+  // transitions
+  let fl = 0, dk = 0, lk = 0, bl = 0;
+  for (const c of CUTS) { const a = t - c; if (a > -0.06 && a < .3) { fl = Math.max(fl, a < 0 ? (a + .06) / .06 * .8 : .8 * Math.exp(-a * 14)); lk = Math.max(lk, a < 0 ? 1 : Math.exp(-a * 5)); bl = Math.max(bl, a < 0 ? 12 : 12 * Math.exp(-a * 18)); } }
+  for (const f of FLASHES) { const a = t - f; if (a >= 0 && a < .25) fl = Math.max(fl, Math.exp(-a * 18)); }
+  { const a = t - 32.1 - .22; if (a >= 0 && a < .2) fl = Math.max(fl, .5 * Math.exp(-a * 20)); }
+  { const a = t - 19.25; if (a > -.1 && a < .2) lk = Math.max(lk, 1 - Math.abs(a) * 5); }
+  dk = Math.max(1 - P(t, 0, .35), P(t, 44.1, 44.5));
+  $('flash').style.opacity = fl; $('dark').style.opacity = dk; $('leak').style.opacity = lk * .9;
+  $('svg').style.filter = bl > .3 ? `blur(${bl}px)` : 'none';
+  renderGrain(Math.round(t * FPS));
+}
+window.render = render; window.DUR = DUR; window.FPS = FPS;
+
+/* ---------- preview mode ---------- */
+function fit() { const s = Math.min(innerWidth / 1080, innerHeight / 1920); const st = $('stage'); st.style.transform = `scale(${s})`; st.style.marginLeft = ((innerWidth - 1080 * s) / 2) + 'px'; }
+if (!/render/.test(location.search)) {
+  addEventListener('resize', fit); fit();
+  const t0 = performance.now();
+  (function loop() { render(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); })();
+} else render(0);
+</script>
+</body>
+</html>
