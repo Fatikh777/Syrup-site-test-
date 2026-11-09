@@ -44,7 +44,11 @@ export function createScene(canvas, opts) {
   const mobile = () => window.innerWidth < 761;
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile() ? 1.5 : 2));
+  // слабые устройства сразу получают меньшее разрешение
+  const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 3;
+  let dpr = Math.min(window.devicePixelRatio || 1, mobile() ? 1.5 : 2);
+  if (weak) dpr = Math.min(dpr, 1);
+  renderer.setPixelRatio(dpr);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NoToneMapping;
 
@@ -397,6 +401,38 @@ export function createScene(canvas, opts) {
     });
 
     renderer.render(scene, camera);
+    watchFps();
+  }
+
+  /* Если кадров мало, упрощаем картинку по шагам:
+     1) меньше разрешение, 2) ещё меньше, 3) простое прозрачное стекло без преломления */
+  const perf = { frames: 0, since: 0, last: 0, level: 0, skip: 30 };
+  function watchFps() {
+    const now = performance.now();
+    const gap = now - perf.last;
+    perf.last = now;
+    if (gap > 250) { perf.since = now; perf.frames = 0; return; } // вкладка была скрыта или пауза
+    if (perf.skip > 0) { perf.skip--; perf.since = performance.now(); perf.frames = 0; return; }
+    perf.frames++;
+    const elapsed = performance.now() - perf.since;
+    if (elapsed < 2000) return;
+    const fps = (perf.frames * 1000) / elapsed;
+    perf.frames = 0;
+    perf.since = performance.now();
+    if (fps >= 40 || perf.level >= 3) return;
+    perf.level++;
+    if (perf.level <= 2) {
+      dpr = Math.max(0.75, dpr * 0.7);
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(canvas.clientWidth || window.innerWidth, canvas.clientHeight || window.innerHeight, false);
+    } else {
+      glassMat.transmission = 0;
+      glassMat.transparent = true;
+      glassMat.opacity = 0.28;
+      glassMat.needsUpdate = true;
+      bubbles.visible = false;
+    }
+    perf.skip = 20;
   }
 
   resize();
@@ -409,7 +445,7 @@ export function createScene(canvas, opts) {
     setPointer(x, y) { state.pointer.set(x, y); },
     setVelocity(v) { state.velocity = v; },
     appear() { state.appearStart = performance.now(); },
-    start() { if (!state.running) { state.running = true; clock.getDelta(); frame(); } },
+    start() { if (!state.running) { state.running = true; perf.skip = 30; clock.getDelta(); frame(); } },
     stop() { state.running = false; },
     renderOnce() { const r = state.running; state.running = true; frame(); state.running = r; },
     redrawText() { buildWordTextures(camera.aspect); drawLabel(STORY[state.labelIdx]); }

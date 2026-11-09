@@ -332,7 +332,7 @@ function runLoader(ready) {
 const introEl = $("#intro");
 const introChars = splitText($(".intro__title"));
 gsap.set(introChars, { yPercent: 115 });
-gsap.set([".eyebrow", ".intro__lede", ".intro__actions", "#scrollHint", "#progress"], { opacity: 0, y: 24 });
+gsap.set([".eyebrow", ".intro__lede", ".intro__actions", "#scrollHint > *", "#progress"], { opacity: 0, y: 24 });
 
 function playIntro() {
   document.body.classList.remove("is-loading");
@@ -340,7 +340,7 @@ function playIntro() {
   const tl = gsap.timeline();
   tl.to(introChars, { yPercent: 0, duration: 1.1, ease: "expo.out", stagger: 0.025 })
     .to([".eyebrow", ".intro__lede", ".intro__actions"], { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.08 }, 0.3)
-    .to(["#scrollHint", "#progress"], { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.7);
+    .to(["#scrollHint > *", "#progress"], { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.7);
   if (scene3d) scene3d.appear();
   $(".sticky-wa").classList.add("is-on");
 }
