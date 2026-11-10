@@ -46,9 +46,14 @@
   .step .n{font-size:44px;color:#3ec5ff;font-weight:700;letter-spacing:.05em}
   .step .s{font-size:132px;letter-spacing:-.045em}
   .fin{position:absolute;left:0;width:1080px;text-align:center;font-weight:900;letter-spacing:-.035em}
-  #pill{position:absolute;left:50%;top:1200px;transform:translateX(-50%);padding:26px 60px;border-radius:999px;background:#3ec5ff;color:#03131c;
+  #wm{position:absolute;left:0;width:1080px;top:1050px;text-align:center;font-size:150px;font-weight:900;letter-spacing:-.02em;line-height:1}
+  #wm .l{display:inline-block;white-space:pre}
+  #wm .a{color:#3ec5ff;letter-spacing:.12em}
+  #wmLine{position:absolute;left:240px;width:600px;top:1235px;height:4px;border-radius:2px;background:linear-gradient(90deg,transparent,#3ec5ff,transparent)}
+  #tagline{position:absolute;left:40px;width:1000px;top:1275px;text-align:center;font-size:36px;font-weight:600;color:rgba(255,255,255,.78)}
+  #tagline b{color:#3ec5ff;font-weight:900}
+  #pill{position:absolute;left:50%;top:1420px;transform:translateX(-50%);padding:26px 60px;border-radius:999px;background:#3ec5ff;color:#03131c;
     font-size:64px;font-weight:900;letter-spacing:-.02em;white-space:nowrap;box-shadow:0 20px 80px rgba(62,197,255,.45)}
-  #dm{position:absolute;left:0;width:1080px;top:1360px;text-align:center;font-size:44px;font-weight:700;color:rgba(255,255,255,.85)}
   #hud{position:absolute;inset:0;opacity:0;font-family:"Inter",monospace;font-weight:600}
   #hud .rec{position:absolute;left:96px;top:150px;font-size:34px;letter-spacing:.12em;display:flex;align-items:center;gap:16px}
   #hud .rec i{width:24px;height:24px;border-radius:50%;background:#ff3b30;display:block}
@@ -247,6 +252,10 @@
   <clipPath id="thumbClip" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="1080" height="1350" rx="40"/></clipPath>
   <clipPath id="screenClip"><rect x="276" y="436" width="528" height="1108" rx="64"/></clipPath>
   <clipPath id="postClip"><rect x="276" y="600" width="528" height="660"/></clipPath>
+  <clipPath id="fkClip"><text x="548" y="874" text-anchor="middle" font-size="212" font-weight="900" font-style="italic" font-family="Inter Display, Inter" letter-spacing="-10">FK</text></clipPath>
+  <linearGradient id="chromeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#c9d3dd"/><stop offset=".5" stop-color="#55606c"/><stop offset=".72" stop-color="#e8eef3"/><stop offset="1" stop-color="#8f9ba7"/></linearGradient>
+  <linearGradient id="trailB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3ec5ff" stop-opacity="0"/><stop offset=".85" stop-color="#bfe9ff"/><stop offset="1" stop-color="#fff"/></linearGradient>
+  <linearGradient id="trailR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff3b3b" stop-opacity="0"/><stop offset=".85" stop-color="#ff6b6b"/><stop offset="1" stop-color="#ffd0d0"/></linearGradient>
   <clipPath id="avClipL"><circle cx="290" cy="800" r="170"/></clipPath>
   <clipPath id="avClipR"><circle cx="790" cy="800" r="170"/></clipPath>
 </defs>
@@ -324,7 +333,7 @@
       <rect x="730" y="472" width="40" height="18" rx="5" fill="none" stroke="#fff" stroke-width="2"/><rect x="733" y="475" width="28" height="12" rx="3" fill="#fff"/>
       <circle cx="320" cy="560" r="26" fill="none" stroke="#ff5a36" stroke-width="4"/>
       <circle cx="320" cy="560" r="19" fill="#3ec5ff"/>
-      <text x="360" y="568" font-size="24" font-weight="800" fill="#fff" font-family="Inter">ваш_ник</text>
+      <text x="360" y="568" font-size="24" font-weight="800" fill="#fff" font-family="Inter">FK AUTO</text>
       <text x="760" y="566" font-size="28" font-weight="900" fill="#fff" font-family="Inter">···</text>
       <g clip-path="url(#postClip)">
         <g id="postImg" transform="translate(276,600) scale(0.4889) translate(0,-495)"><use href="#studioScene"/></g>
@@ -336,7 +345,7 @@
       <path d="M440,1282 l40,14 l-40,16 l8,-16 z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
       <path d="M752,1280 h26 v40 l-13,-10 l-13,10 z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
       <text id="likes" x="300" y="1370" font-size="24" font-weight="800" fill="#fff" font-family="Inter">Нравится: 0</text>
-      <text x="300" y="1408" font-size="22" fill="#fff" font-family="Inter"><tspan font-weight="800">ваш_ник</tspan> BMW 5 · G30. Без единой</text>
+      <text x="300" y="1408" font-size="22" fill="#fff" font-family="Inter"><tspan font-weight="800">FK AUTO</tspan> BMW 5 · G30. Без единой</text>
       <text x="300" y="1438" font-size="22" fill="#fff" font-family="Inter">царапины, все ТО у дилера.</text>
       <text id="cmts" x="300" y="1476" font-size="21" fill="#8a8f98" font-family="Inter">Смотреть все комментарии (0)</text>
     </g>
@@ -391,6 +400,22 @@
     <use id="outlineBody" href="#bodyPath"/>
     <circle id="olw1" cx="170" cy="209" r="58"/><circle id="olw2" cx="712" cy="209" r="58"/>
   </g>
+  <rect id="trail1" x="0" y="788" width="1500" height="8" rx="4" fill="url(#trailB)" filter="url(#blur6)" opacity="0"/>
+  <rect id="trail2" x="0" y="818" width="1500" height="6" rx="3" fill="url(#trailR)" filter="url(#blur6)" opacity="0"/>
+  <circle id="eRing1" cx="540" cy="800" r="10" fill="none" stroke="#3ec5ff" stroke-width="8" opacity="0"/>
+  <circle id="eRing2" cx="540" cy="800" r="10" fill="none" stroke="#fff" stroke-width="3" opacity="0"/>
+  <g id="emblem" opacity="0">
+    <circle cx="540" cy="800" r="250" fill="#3ec5ff" opacity=".18" filter="url(#blur30)"/>
+    <circle cx="540" cy="800" r="200" fill="#07090d"/>
+    <circle cx="540" cy="800" r="194" fill="none" stroke="url(#chromeG)" stroke-width="12"/>
+    <circle id="embArc" cx="540" cy="800" r="166" fill="none" stroke="#3ec5ff" stroke-width="5" stroke-linecap="round" transform="rotate(-90 540 800)"/>
+    <g id="embTicks" stroke="#3ec5ff" stroke-width="5" stroke-linecap="round" opacity="0">
+      <path d="M352,770 h30 M342,800 h46 M352,830 h30"/>
+    </g>
+    <text x="548" y="874" text-anchor="middle" font-size="212" font-weight="900" font-style="italic" font-family="Inter Display, Inter" letter-spacing="-10" fill="url(#chromeG)" stroke="#0b0e13" stroke-width="2">FK</text>
+    <g clip-path="url(#fkClip)"><rect id="fkSweep" x="-300" y="600" width="90" height="400" fill="#fff" opacity=".85" transform="skewX(-20)"/></g>
+  </g>
+  <use id="endFob" href="#fobDef" opacity="0"/>
 </g>
 </svg>
 
@@ -415,8 +440,10 @@
   <div class="fin" id="f1" style="top:700px;font-size:110px">Отдаёшь ключ.</div>
   <div class="fin" id="f2" style="top:830px;font-size:110px;color:#3ec5ff">Получаешь деньги.</div>
   <div class="fin" id="f3" style="top:1000px;font-size:46px;font-weight:600;letter-spacing:0;color:rgba(255,255,255,.7)">Всё, что между, — наша работа.</div>
-  <div id="pill">@ваш_ник</div>
-  <div id="dm">Пиши в директ <span id="arr" style="display:inline-block">→</span></div>
+  <div id="wm"><span class="l">F</span><span class="l">K</span><span class="l sp"> </span><span class="l a">A</span><span class="l a">U</span><span class="l a">T</span><span class="l a">O</span></div>
+  <div id="wmLine"></div>
+  <div id="tagline"><b>F</b>ast <b>K</b>eys — ключи быстро находят нового хозяина</div>
+  <div id="pill">Пиши в директ <span id="arr" style="display:inline-block">→</span></div>
 </div>
 
 <div class="layer" id="leak"></div>
@@ -427,7 +454,24 @@
 </div>
 
 <script>
-const DUR = 44.5, FPS = 30;
+const DUR = 48.5, FPS = 30;
+/* Time warp: [internal start, internal end, speed]. Slows the moments where text is on screen
+   so viewers can read it. sound.py uses the same list. */
+const WARP = [[2.86, 2.91, .03], [6.95, 7.1, .08], [10.255, 10.27, .009], [11.55, 11.75, .2], [13.0, 13.25, .3],
+  [14.4, 14.65, .3], [15.92, 16.0, .1], [18.2, 18.75, .25], [22.4, 22.6, .2], [23.9, 24.6, .3], [28.0, 28.5, .3],
+  [34.35, 34.62, .12], [36.9, 37.22, .2], [39.3, 39.85, .35], [41.8, 42.3, .3]];
+function tOf(T) {
+  let ct = 0, cT = 0;
+  for (const [a, b, r] of WARP) {
+    if (T < cT + (a - ct)) return ct + (T - cT);
+    cT += a - ct; ct = a;
+    const d = (b - a) / r;
+    if (T < cT + d) return a + (T - cT) * r;
+    cT += d; ct = b;
+  }
+  return ct + (T - cT);
+}
+const OUT_DUR = (() => { let ex = 0; for (const [a, b, r] of WARP) ex += (b - a) / r - (b - a); return DUR + ex; })();
 const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg';
 const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -573,22 +617,22 @@ $('c2').innerHTML = carMarkup('c2', false);
 const CAPS = [
   [0.25, 1.35, 300, 'kick', 'Пятница · 21:47'],
   [1.75, 3.2, 1430, 'big', 'Приехал *эффектно.*'],
-  [2.25, 3.2, 1555, 'mid', 'Уехать хочет — *с деньгами.*'],
+  [2.15, 3.2, 1555, 'mid', 'Уехать хочет — *с деньгами.*'],
   [9.1, 10.55, 1360, 'big', 'Ключ — *у нас.*'],
-  [9.5, 10.55, 1480, 'mid', 'А с ним — вся возня с продажей.'],
+  [9.35, 10.55, 1480, 'mid', 'А с ним — вся возня с продажей.'],
   [10.95, 12.1, 1480, 'huge', 'Свет.'],
   [12.45, 13.55, 1480, 'huge', 'Ракурс.'],
   [13.95, 14.95, 1480, 'huge', 'Детали.'],
-  [15.4, 16.3, 1520, 'big', 'И ещё раз *детали.*'],
+  [15.25, 16.3, 1520, 'big', 'И ещё раз *детали.*'],
   [17.0, 19.1, 1470, 'mid', 'Не «фото с парковки».'],
   [17.4, 19.1, 1560, 'mid', 'Кадры, после которых *пишут в директ.*'],
   [22.9, 25.1, 200, 'big', 'Пост вышел —'],
   [23.3, 25.1, 310, 'big', '*директ проснулся.*'],
   [26.0, 28.9, 1420, 'mid', 'Едет не «посмотреть».'],
   [26.6, 28.9, 1520, 'big', '*Едет забирать.*'],
-  [32.9, 34.95, 1370, 'mid', 'Деньги — владельцу.'],
-  [33.3, 34.95, 1455, 'mid', 'Ключи — новому хозяину.'],
-  [33.9, 34.95, 1590, 'mid', 'Нам — процент. *Всем — без нервов.*'],
+  [32.7, 34.95, 1370, 'mid', 'Деньги — владельцу.'],
+  [33.05, 34.95, 1455, 'mid', 'Ключи — новому хозяину.'],
+  [33.5, 34.95, 1590, 'mid', 'Нам — процент. *Всем — без нервов.*'],
   [35.9, 37.55, 1440, 'big', 'Следующая — *твоя?*'],
 ];
 const capEls = CAPS.map(([t0, t1, y, cls, txt]) => {
@@ -905,21 +949,47 @@ function renderEnd(t) {
     n.style.transform = `translateX(${(1 - e) * -120 + o * 160}px)`;
     n.style.filter = `blur(${(1 - e) * 10 + o * 12}px)`;
   });
+  const fo = eIC(P(t, 42.35, 42.65));
   [['f1', 40.25], ['f2', 40.65], ['f3', 41.2]].forEach(([id, tb]) => {
     const e = eOC(P(t, tb, tb + .55)), n = $(id);
-    n.style.opacity = e; n.style.transform = `translateY(${(1 - e) * 50}px)`; n.style.filter = `blur(${(1 - e) * 10}px)`;
+    n.style.opacity = e * (1 - fo); n.style.transform = `translateY(${(1 - e) * 50 - fo * 120}px)`; n.style.filter = `blur(${(1 - e) * 10 + fo * 14}px)`;
   });
   const d = eIOC(P(t, 40.0, 41.6));
   A($('outlineBody'), { 'stroke-dasharray': OL, 'stroke-dashoffset': OL * (1 - d) });
   const wl = 2 * Math.PI * 58;
   ['olw1', 'olw2'].forEach(id => A($(id), { 'stroke-dasharray': wl, 'stroke-dashoffset': wl * (1 - eIOC(P(t, 40.8, 41.6))) }));
-  A($('outline'), { opacity: t > 39.95 ? 1 : 0 });
-  const pe = eOB(P(t, 41.8, 42.2));
-  $('pill').style.opacity = P(t, 41.8, 41.95);
+  A($('outline'), { opacity: t > 39.95 ? 1 - fo : 0, transform: `translate(${180 - fo * 900},330) scale(.8)` });
+  // key flies in, implodes into the emblem
+  const kf = eOC(P(t, 42.5, 43.15)), imp = eIC(P(t, 43.15, 43.25));
+  A($('endFob'), { opacity: t > 42.5 && t < 43.25 ? 1 : 0, transform: `translate(540,${lerp(2250, 800, kf)}) rotate(${(1 - kf) * 900}) scale(${lerp(.5, 1.05, kf) * (1 - imp)})` });
+  const LG = 43.25;
+  [['eRing1', 0, 520, 8], ['eRing2', .07, 700, 3]].forEach(([id, dl, Rr, w]) => {
+    const a = P(t, LG + dl, LG + dl + .8);
+    A($(id), { r: 20 + eOC(a) * Rr, opacity: a > 0 && a < 1 ? 1 - a : 0, 'stroke-width': w * (1 - a) + .5 });
+  });
+  const em = eOB(P(t, LG, LG + .5));
+  A($('emblem'), { opacity: t > LG ? 1 : 0, transform: `translate(540,800) scale(${em * (1 + .015 * Math.sin((t - LG) * 2))}) translate(-540,-800)` });
+  const arcL = 2 * Math.PI * 166;
+  A($('embArc'), { 'stroke-dasharray': arcL, 'stroke-dashoffset': arcL * (1 - eIOC(P(t, LG + .2, LG + 1.0))) });
+  A($('embTicks'), { opacity: P(t, LG + .7, LG + .9), transform: `translate(${(1 - eOC(P(t, LG + .7, LG + 1.0))) * -40},0)` });
+  const sw = (t - (LG + .9)) % 2.6;
+  A($('fkSweep'), { x: t > LG + .9 && sw < 1 ? lerp(250, 900, eIOC(sw)) : -400 });
+  [['trail1', 0, 1], ['trail2', .05, -1]].forEach(([id, dl, dir]) => {
+    const a = P(t, LG - .05 + dl, LG + .45 + dl);
+    A($(id), { opacity: a > 0 && a < 1 ? Math.sin(a * Math.PI) : 0, x: dir > 0 ? lerp(-1600, 1100, a) : lerp(1100, -1600, a), transform: dir < 0 ? 'scale(-1,1) translate(-1080,0)' : '' });
+  });
+  [...document.querySelectorAll('#wm .l')].forEach((n, i) => {
+    const e = eOC(P(t, LG + .45 + i * .07, LG + .95 + i * .07));
+    n.style.opacity = e; n.style.transform = `translateY(${(1 - e) * 80}px) scale(${lerp(1.3, 1, e)})`; n.style.filter = `blur(${(1 - e) * 12}px)`;
+  });
+  const ln = eIOC(P(t, LG + 1.0, LG + 1.5));
+  $('wmLine').style.opacity = ln; $('wmLine').style.transform = `scaleX(${ln})`;
+  const tg = eOC(P(t, LG + 1.3, LG + 1.8));
+  $('tagline').style.opacity = tg; $('tagline').style.transform = `translateY(${(1 - tg) * 30}px)`;
+  const pe = eOB(P(t, LG + 1.9, LG + 2.3));
+  $('pill').style.opacity = P(t, LG + 1.9, LG + 2.0);
   $('pill').style.transform = `translateX(-50%) scale(${pe})`;
-  const dm = eOC(P(t, 42.2, 42.6));
-  $('dm').style.opacity = dm; $('dm').style.transform = `translateY(${(1 - dm) * 30}px)`;
-  $('arr').style.transform = `translateX(${Math.max(0, Math.sin((t - 42.6) * 6)) * 14}px)`;
+  $('arr').style.transform = `translateX(${Math.max(0, Math.sin((t - LG - 2.3) * 6)) * 14}px)`;
 }
 
 /* ---------- master ---------- */
@@ -928,7 +998,8 @@ const SC = [
   ['sPhone', 19.25, 25.25], ['sMap', 25.25, 29.05], ['sDeal', 29.05, 35.05], ['sStreet2', 35.05, 37.65], ['sEnd', 37.65, 99],
 ];
 const CUTS = [4.65, 7.45, 10.65, 25.25, 29.05, 35.05, 37.65];
-function render(t) {
+function render(T) {
+  const t = tOf(T);
   const on = n => SC.some(([id, a, b]) => id.startsWith(n) && t >= a && t < b);
   const street = on('sStreet');
   vis($('sStreet'), street); vis($('sBust'), on('sBust')); vis($('sKey'), on('sKey')); vis($('sStudio'), on('sStudio') || on('sPhone') && false);
@@ -948,19 +1019,20 @@ function render(t) {
   for (const f of FLASHES) { const a = t - f; if (a >= 0 && a < .25) fl = Math.max(fl, Math.exp(-a * 18)); }
   { const a = t - 32.1 - .22; if (a >= 0 && a < .2) fl = Math.max(fl, .5 * Math.exp(-a * 20)); }
   { const a = t - 19.25; if (a > -.1 && a < .2) lk = Math.max(lk, 1 - Math.abs(a) * 5); }
-  dk = Math.max(1 - P(t, 0, .35), P(t, 44.1, 44.5));
+  { const a = t - 43.25; if (a >= 0 && a < .4) { fl = Math.max(fl, .95 * Math.exp(-a * 12)); lk = Math.max(lk, Math.exp(-a * 4)); } }
+  dk = Math.max(1 - P(t, 0, .35), P(t, DUR - .5, DUR));
   $('flash').style.opacity = fl; $('dark').style.opacity = dk; $('leak').style.opacity = lk * .9;
   $('svg').style.filter = bl > .3 ? `blur(${bl}px)` : 'none';
-  renderGrain(Math.round(t * FPS));
+  renderGrain(Math.round(T * FPS));
 }
-window.render = render; window.DUR = DUR; window.FPS = FPS;
+window.render = render; window.DUR = OUT_DUR; window.FPS = FPS;
 
 /* ---------- preview mode ---------- */
 function fit() { const s = Math.min(innerWidth / 1080, innerHeight / 1920); const st = $('stage'); st.style.transform = `scale(${s})`; st.style.marginLeft = ((innerWidth - 1080 * s) / 2) + 'px'; }
 if (!/render/.test(location.search)) {
   addEventListener('resize', fit); fit();
   const t0 = performance.now();
-  (function loop() { render(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); })();
+  (function loop() { render(((performance.now() - t0) / 1000) % OUT_DUR); requestAnimationFrame(loop); })();
 } else render(0);
 </script>
 </body>

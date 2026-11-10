@@ -1,6 +1,17 @@
 """Synthesizes the soundtrack (beat + SFX) for promo.html. Output: soundtrack.wav"""
 import numpy as np, wave, sys
-SR = 44100; DUR = 44.5
+import re
+SR = 44100
+_html = open(__file__.rsplit('/', 1)[0] + '/promo.html' if '/' in __file__ else 'promo.html').read()
+WARP = eval(re.search(r'const WARP = (\[[\s\S]*?\]\]);', _html).group(1))
+IDUR = float(re.search(r'const DUR = ([\d.]+)', _html).group(1))
+def O(t):  # internal time -> output time
+    o = t
+    for a, b, r in WARP:
+        if t >= b: o += (b - a) / r - (b - a)
+        elif t > a: o += (t - a) / r - (t - a)
+    return o
+DUR = O(IDUR)
 N = int(SR * DUR)
 L = np.zeros(N); R = np.zeros(N)
 rs = np.random.default_rng(7)
@@ -10,8 +21,11 @@ def bandnoise(n, lo, hi):
     X[(f < lo) | (f > hi)] = 0
     y = np.fft.irfft(X, n); return y / (np.abs(y).max() + 1e-9)
 
-def add(t0, sig, gain=1.0, pan=0.0):
-    i = int(t0 * SR)
+def addm(t0, sig, gain=1.0, pan=0.0):
+    add(t0, sig, gain, pan, raw=True)
+
+def add(t0, sig, gain=1.0, pan=0.0, raw=False):
+    i = int((t0 if raw else O(t0)) * SR)
     if i >= N: return
     sig = sig[: N - i] * gain
     L[i:i + len(sig)] += sig * (1 - pan) ** .5 * 1.0
@@ -87,31 +101,53 @@ add(1.05, scr * np.minimum(1, t / .05) * np.minimum(1, (0.62 - t) / .1), .28)
 add(1.62, boom(1.0), .9)
 add(1.62, snare(.4))
 
-# ---------- beat 1.62 -> 44 ----------
-bpm = 100; beat = 60 / bpm
-bt = 1.62
-while bt < 43.6:
-    i = round((bt - 1.62) / beat)
-    quiet = 39.2 < bt < 40.25
-    if not quiet:
-        if i % 4 in (0, 2) or (i % 8 == 7): add(bt, kick(.85))
-        if i % 4 == 1 or i % 4 == 3: add(bt, snare(.28))
-        add(bt, hat(.12), pan=-.3); add(bt + beat / 2, hat(.08), pan=.3)
-    bt += beat
-# sub bass line
-notes = [41.2, 41.2, 36.7, 49.0]
-bt = 1.62; k = 0
-while bt < 43.6:
-    if not (39.2 < bt < 40.25):
-        f = notes[(k // 4) % 4]
-        add(bt, tone(f, beat * 2, a=.01, d=beat * 1.6, curve=2.5), .35)
-        add(bt, tone(f * 2, beat * 2, a=.01, d=beat, curve=3, kind='saw'), .04)
-    bt += beat * 2; k += 2
-# pad
-n = int(42 * SR); t = np.arange(n) / SR
-pad = sum(np.sin(2 * np.pi * f * t + i) for i, f in enumerate([110, 164.8, 220.5, 261.6])) / 4
-pad *= np.clip(t / 3, 0, 1) * (.6 + .4 * np.sin(2 * np.pi * .1 * t))
-add(1.62, pad, .05)
+# ---------- phonk track (output time) ----------
+BPM = 130; BEAT = 60 / BPM; ST = BEAT / 4
+DROP = 1.62
+def cowbell(f, g=1.0):
+    n = int(.22 * SR); t = np.arange(n) / SR
+    sq = np.sign(np.sin(2 * np.pi * f * t)) + np.sign(np.sin(2 * np.pi * f * 1.4836 * t))
+    X = np.fft.rfft(sq); fr = np.fft.rfftfreq(n, 1 / SR); X[(fr < 450) | (fr > 5000)] = 0
+    y = np.fft.irfft(X, n); y /= np.abs(y).max()
+    return y * np.exp(-t * 16) * g
+def b808(f, dur, g=1.0):
+    n = int(dur * SR); t = np.arange(n) / SR
+    fr = f * (1 + 1.2 * np.exp(-t * 30))
+    y = np.sin(2 * np.pi * np.cumsum(fr) / SR)
+    y = np.tanh(y * 3) * np.exp(-t * 1.1) * np.minimum(1, (dur - t) / .03)
+    return y * g
+def clap(g=.5):
+    n = int(.25 * SR); x = bandnoise(n, 900, 9000); t = np.arange(n) / SR
+    e = sum(np.exp(-np.maximum(0, t - d) * 60) * (t >= d) for d in (0, .01, .022)) / 3 + np.exp(-t * 18) * .6
+    return x * e * g
+D5, F5, G5, A5, C5, C6 = 587.3, 698.5, 784.0, 880.0, 523.3, 1046.5
+MEL = [{0: D5, 3: D5, 6: F5, 8: A5, 10: G5, 12: F5, 14: D5},
+       {0: C5, 3: C5, 6: D5, 8: F5, 10: G5, 12: A5, 13: C6, 14: A5}]
+BASS = [73.4, 73.4, 58.3, 65.4]
+BREAK = (O(42.35), O(43.25))          # drums drop out right before the logo hit
+END = DUR - .4
+# intro: cowbell riff alone before the car stops
+step = DROP - 16 * ST; k = 0
+while step < END:
+    if step >= 0:
+        bar = int(round((step - DROP) / ST)) // 16 if step >= DROP else -1
+        pos = int(round((step - DROP) / ST)) % 16
+        inbreak = BREAK[0] <= step < BREAK[1]
+        mel = MEL[(bar // 1) % 2 if bar >= 0 else 0]
+        if pos in mel: addm(step, cowbell(mel[pos]), .16 if step < DROP else .2, pan=.25)
+        if step >= DROP and not inbreak:
+            if pos in (0, 7, 10): addm(step, kick(1.0))
+            if pos in (4, 12): addm(step, clap(.42))
+            if pos % 2 == 0: addm(step, hat(.13), pan=-.3)
+            if bar % 2 == 1 and pos >= 12: addm(step + ST / 2, hat(.08), pan=.3)
+            if pos == 0: addm(step, b808(BASS[bar % 4], BEAT * 3.6), .42)
+    step += ST
+# riser into the drop and into the logo
+n = int(1.4 * SR); tt = np.linspace(0, 1, n)
+addm(DROP - 1.4, bandnoise(n, 500, 9000) * tt ** 3, .22)
+n = int((BREAK[1] - BREAK[0]) * SR); tt = np.linspace(0, 1, n)
+addm(BREAK[0], bandnoise(n, 600, 10000) * tt ** 2.5, .3)
+addm(BREAK[0], b808(55, BREAK[1] - BREAK[0]), .25)
 
 # ---------- SFX ----------
 for c in [4.65, 7.45, 10.65, 19.25, 25.25, 29.05, 35.05, 37.65]:
@@ -138,11 +174,11 @@ rpm = 60 + 120 * np.clip(t / 1.4, 0, 1) ** 1.5
 ph = 2 * np.pi * np.cumsum(rpm) / SR
 eng = (np.sin(ph) + .6 * np.sin(2 * ph + 1) + .4 * np.sin(3 * ph)) / 2
 add(35.5, eng * np.minimum(1, t / .2) * np.exp(-np.maximum(0, t - 1.2) * 2.5), .5, pan=-.5)
-# riser + final hit
-n = int(1.0 * SR); t = np.linspace(0, 1, n)
-add(39.25, bandnoise(n, 800, 9000) * t ** 3, .35)
-add(40.25, boom(1.2, 38, 2.5), .9); add(40.25, chime([523, 784, 1046, 1568], .18, 2.5))
-add(41.8, blip(1046, 1568, .25))
+add(40.25, chime([523, 784, 1046], .12, 1.5))
+add(42.5, whoosh(.75, 400, 7000, .5))
+add(43.25, boom(1.3, 36, 2.8), 1.0); add(43.25, chime([523, 784, 1046, 1568, 2093], .2, 2.8)); add(43.25, snare(.5))
+for i in range(4): add(43.7 + i * .07, click(.25))
+add(45.15, blip(1046, 1568, .25))
 
 mix = np.stack([L, R], 1)
 # fade in/out
